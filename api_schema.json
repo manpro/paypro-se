@@ -1,0 +1,1280 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CrewAI Studio API",
+    "description": "\n# CrewAI Studio API\n\nDetta API l\u00e5ter dig interagera med CrewAI Studio programmatiskt. \nDu kan hantera agenter, uppgifter och crews, samt k\u00f6ra kommandon f\u00f6r att utf\u00f6ra olika operationer.\n\n## Kommandodriven struktur\n\nAPI:et erbjuder tv\u00e5 olika gr\u00e4nssnitt:\n- Ett traditionellt REST API som f\u00f6ljer resursprinciper\n- Ett kommandodrivet gr\u00e4nssnitt som erbjuder ett mer enhetligt s\u00e4tt att interagera med API:et\n\n### Vanliga anv\u00e4ndningsfall\n\n- Skapa och hantera agenter, uppgifter och crews\n- K\u00f6ra asynkrona uppgifter med l\u00e5ng exekveringstid\n- H\u00e4mta resultat fr\u00e5n tidigare k\u00f6rningar\n- Konfigurera verktyg och inst\u00e4llningar\n",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/execute": {
+      "post": {
+        "tags": [
+          "Command-Driven"
+        ],
+        "summary": "Execute Command Endpoint",
+        "description": "Exekvera ett kommando med valfria parametrar.",
+        "operationId": "execute_command_endpoint_execute_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Execute Command Endpoint Execute Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/status/{task_id}": {
+      "get": {
+        "tags": [
+          "Command-Driven"
+        ],
+        "summary": "Get Task Status",
+        "description": "H\u00e4mta status f\u00f6r en asynkron k\u00f6rning.",
+        "operationId": "get_task_status_status__task_id__get",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Task Status Status  Task Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/commands": {
+      "get": {
+        "tags": [
+          "Command-Driven"
+        ],
+        "summary": "Get Commands",
+        "description": "Lista alla tillg\u00e4ngliga kommandon.",
+        "operationId": "get_commands_commands_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/CommandInfo"
+                  },
+                  "type": "object",
+                  "title": "Response Get Commands Commands Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Get Agents",
+        "description": "H\u00e4mta alla agenter.",
+        "operationId": "get_agents_agents_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Create Agent",
+        "description": "Skapa en ny agent.",
+        "operationId": "create_agent_agents_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/agents/{agent_id}": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Get Agent",
+        "description": "H\u00e4mta en specifik agent.",
+        "operationId": "get_agent_agents__agent_id__get",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Update Agent",
+        "description": "Uppdatera en befintlig agent.",
+        "operationId": "update_agent_agents__agent_id__put",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentBase"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Delete Agent",
+        "description": "Ta bort en agent.",
+        "operationId": "delete_agent_agents__agent_id__delete",
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Agent Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get Tasks",
+        "description": "H\u00e4mta alla uppgifter.",
+        "operationId": "get_tasks_tasks_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Create Task",
+        "description": "Skapa en ny uppgift.",
+        "operationId": "create_task_tasks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{task_id}": {
+      "get": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Get Task",
+        "description": "H\u00e4mta en specifik uppgift.",
+        "operationId": "get_task_tasks__task_id__get",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Tasks"
+        ],
+        "summary": "Update Task",
+        "description": "Uppdatera en befintlig uppgift.",
+        "operationId": "update_task_tasks__task_id__put",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskBase"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Task",
+        "description": "Ta bort en specifik uppgift.",
+        "operationId": "delete_task_tasks__task_id__delete",
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Task Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crews": {
+      "get": {
+        "tags": [
+          "Crews"
+        ],
+        "summary": "Get Crews",
+        "description": "H\u00e4mta alla crews.",
+        "operationId": "get_crews_crews_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Crews"
+        ],
+        "summary": "Create Crew",
+        "description": "Skapa ett nytt crew.",
+        "operationId": "create_crew_crews_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrewBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/crews/{crew_id}": {
+      "get": {
+        "tags": [
+          "Crews"
+        ],
+        "summary": "Get Crew",
+        "description": "H\u00e4mta ett specifikt crew.",
+        "operationId": "get_crew_crews__crew_id__get",
+        "parameters": [
+          {
+            "name": "crew_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Crew Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Crews"
+        ],
+        "summary": "Update Crew",
+        "description": "Uppdatera ett befintligt crew.",
+        "operationId": "update_crew_crews__crew_id__put",
+        "parameters": [
+          {
+            "name": "crew_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Crew Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrewBase"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Crew",
+        "description": "Ta bort ett specifikt crew.",
+        "operationId": "delete_crew_crews__crew_id__delete",
+        "parameters": [
+          {
+            "name": "crew_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Crew Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tools": {
+      "get": {
+        "tags": [
+          "Tools"
+        ],
+        "summary": "Get Tools",
+        "description": "H\u00e4mta alla tillg\u00e4ngliga verktyg.",
+        "operationId": "get_tools_tools_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "additionalProperties": true,
+                    "type": "object"
+                  },
+                  "type": "object",
+                  "title": "Response Get Tools Tools Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/enabled-tools": {
+      "get": {
+        "tags": [
+          "Tools"
+        ],
+        "summary": "Get Enabled Tools",
+        "description": "H\u00e4mta lista \u00f6ver aktiverade verktyg.",
+        "operationId": "get_enabled_tools_enabled_tools_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "title": "Response Get Enabled Tools Enabled Tools Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tools"
+        ],
+        "summary": "Update Enabled Tools",
+        "description": "Uppdatera listan \u00f6ver aktiverade verktyg.",
+        "operationId": "update_enabled_tools_enabled_tools_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array",
+                "title": "Tools"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/runs": {
+      "get": {
+        "tags": [
+          "Runs"
+        ],
+        "summary": "Get Runs",
+        "description": "H\u00e4mta alla k\u00f6rningar.",
+        "operationId": "get_runs_runs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Runs"
+        ],
+        "summary": "Start Run",
+        "description": "Starta en crew-k\u00f6rning.\n\nAccepterar crew_id i b\u00e5da formaten (med eller utan C_ prefix)\noch normaliserar det korrekt f\u00f6r databasuppslag.",
+        "operationId": "start_run_runs_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/runs/{run_id}": {
+      "get": {
+        "tags": [
+          "Runs"
+        ],
+        "summary": "Get Run",
+        "description": "H\u00e4mta en specifik k\u00f6rning.",
+        "operationId": "get_run_runs__run_id__get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/runs/{run_id}/output": {
+      "get": {
+        "summary": "Get Run Output",
+        "description": "H\u00e4mta output fr\u00e5n en specifik k\u00f6rning.",
+        "operationId": "get_run_output_runs__run_id__output_get",
+        "parameters": [
+          {
+            "name": "run_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Run Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/agents": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Get Agents V2",
+        "description": "V2: H\u00e4mta alla agenter utan att anv\u00e4nda Pydantic-modeller.\nDetta \u00e4r en backup-l\u00f6sning som garanterat fungerar.",
+        "operationId": "get_agents_v2_v2_agents_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AgentBase": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "goal": {
+            "type": "string",
+            "title": "Goal"
+          },
+          "backstory": {
+            "type": "string",
+            "title": "Backstory"
+          },
+          "llm_provider_model": {
+            "type": "string",
+            "title": "Llm Provider Model",
+            "default": "gpt-3.5-turbo"
+          },
+          "verbose": {
+            "type": "boolean",
+            "title": "Verbose",
+            "default": true
+          },
+          "allow_delegation": {
+            "type": "boolean",
+            "title": "Allow Delegation",
+            "default": false
+          },
+          "tool_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tool Ids",
+            "default": []
+          },
+          "temperature": {
+            "type": "number",
+            "title": "Temperature",
+            "default": 0.7
+          },
+          "max_iter": {
+            "type": "integer",
+            "title": "Max Iter",
+            "default": 25
+          },
+          "cache": {
+            "type": "boolean",
+            "title": "Cache",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "goal",
+          "backstory"
+        ],
+        "title": "AgentBase"
+      },
+      "CommandInfo": {
+        "properties": {
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "parameters": {
+            "additionalProperties": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "object",
+            "title": "Parameters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "description",
+          "parameters"
+        ],
+        "title": "CommandInfo"
+      },
+      "CommandRequest": {
+        "properties": {
+          "command": {
+            "type": "string",
+            "title": "Command"
+          },
+          "parameters": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Parameters",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "command"
+        ],
+        "title": "CommandRequest"
+      },
+      "CrewBase": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "process": {
+            "type": "string",
+            "enum": [
+              "sequential",
+              "hierarchical"
+            ],
+            "title": "Process",
+            "default": "sequential"
+          },
+          "verbose": {
+            "type": "boolean",
+            "title": "Verbose",
+            "default": true
+          },
+          "agent_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Agent Ids",
+            "default": []
+          },
+          "task_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Task Ids",
+            "default": []
+          },
+          "memory": {
+            "type": "boolean",
+            "title": "Memory",
+            "default": false
+          },
+          "cache": {
+            "type": "boolean",
+            "title": "Cache",
+            "default": true
+          },
+          "planning": {
+            "type": "boolean",
+            "title": "Planning",
+            "default": false
+          },
+          "max_rpm": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Rpm"
+          },
+          "manager_llm": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manager Llm"
+          },
+          "manager_agent_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Manager Agent Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CrewBase"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "RunRequest": {
+        "properties": {
+          "crew_id": {
+            "type": "string",
+            "title": "Crew Id"
+          },
+          "inputs": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Inputs",
+            "default": {}
+          }
+        },
+        "type": "object",
+        "required": [
+          "crew_id"
+        ],
+        "title": "RunRequest"
+      },
+      "TaskBase": {
+        "properties": {
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "expected_output": {
+            "type": "string",
+            "title": "Expected Output"
+          },
+          "agent_id": {
+            "type": "string",
+            "title": "Agent Id"
+          },
+          "async_execution": {
+            "type": "boolean",
+            "title": "Async Execution",
+            "default": false
+          },
+          "context_from_async_tasks_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Context From Async Tasks Ids",
+            "default": []
+          },
+          "context_from_sync_tasks_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Context From Sync Tasks Ids",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": [
+          "description",
+          "expected_output",
+          "agent_id"
+        ],
+        "title": "TaskBase"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Command-Driven",
+      "description": "Kommandodriven API-struktur"
+    },
+    {
+      "name": "Agents",
+      "description": "Hantera agenter"
+    },
+    {
+      "name": "Tasks",
+      "description": "Hantera uppgifter"
+    },
+    {
+      "name": "Crews",
+      "description": "Hantera crews"
+    },
+    {
+      "name": "Tools",
+      "description": "Hantera verktyg"
+    },
+    {
+      "name": "Runs",
+      "description": "Hantera k\u00f6rningar"
+    }
+  ]
+}

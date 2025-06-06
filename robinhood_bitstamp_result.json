@@ -1,0 +1,17 @@
+{
+  "crew_name": "Paypro Article Generation Crew - Robinhood/Bitstamp",
+  "results": {
+    "Economic Research": "Simulated result for task 'Economic Research'",
+    "Cryptocurrency Analysis": "Simulated result for task 'Cryptocurrency Analysis'",
+    "SEO Article Writing": "Simulated result for task 'SEO Article Writing'",
+    "Professional Image Creation": "Simulated result for task 'Professional Image Creation'",
+    "Editorial Polish": "Simulated result for task 'Editorial Polish'",
+    "HTML Formatting": "Simulated result for task 'HTML Formatting'"
+  },
+  "inputs": {
+    "topic": "Robinhood's strategic acquisition of Bitstamp: implications for crypto regulation and European expansion",
+    "theme": "crypto_focus",
+    "target_length": "1500+ words",
+    "language": "English"
+  }
+}

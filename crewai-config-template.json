@@ -1,0 +1,65 @@
+{
+  "system": {
+    "version": "2.1",
+    "description": "Paypro.se Multi-Agent Content Generation System",
+    "api_endpoint": "http://172.16.16.148:8088"
+  },
+  "agents": {
+    "agent_template": {
+      "name": "Agent Namn",
+      "role": "Agent Roll/Titel",
+      "llm": "qwen2.5-7b | gpt-4o-mini | gpt-image-1",
+      "goal": "Tydligt definierat mål för agenten - vad ska den uppnå?",
+      "backstory": "Detaljerad bakgrund som etablerar agentens expertis, erfarenhet och personlighet. Inkludera relevant utbildning, arbetslivserfarenhet och specialkompetenser.",
+      "verbose": true,
+      "allow_delegation": false,
+      "tools": [
+        "search",
+        "DallETool"
+      ],
+      "prompt_instructions": "Specifika instruktioner för hur agenten ska bete sig, vilka aspekter som ska prioriteras, vilken stil och ton som ska användas."
+    }
+  },
+  "teams": {
+    "team_template": {
+      "name": "Team Namn",
+      "description": "Beskrivning av teamets syfte och workflow",
+      "agents": [
+        "agent1",
+        "agent2",
+        "agent3"
+      ],
+      "tasks": [
+        {
+          "agent": "agent1",
+          "description": "Detaljerad beskrivning av vad agenten ska göra i detta steg",
+          "expected_output": "Vad förväntas som resultat från denna task"
+        }
+      ]
+    }
+  },
+  "topic_themes": {
+    "custom_theme": {
+      "focus": "Beskrivning av vad detta tema fokuserar på",
+      "keywords": [
+        "nyckelord1",
+        "nyckelord2",
+        "nyckelord3"
+      ],
+      "tone": "Beskrivning av önskad ton och stil"
+    }
+  },
+  "examples": {
+    "prompt_improvements": {
+      "specificity": "Gör prompts mer specifika genom att lägga till konkreta exempel och parametrar",
+      "context": "Tillhandahåll mer kontext om Paypro.se's målgrupp och brand",
+      "constraints": "Lägg till begränsningar för att styra outputen (längd, stil, format)",
+      "examples": "Inkludera exempel på önskad output för att förtydliga förväntningar"
+    },
+    "theme_customization": {
+      "seasonal": "Anpassa teman för olika säsonger (Q4 rapporter, sommarlunchor, etc.)",
+      "target_audience": "Olika teman för olika målgrupper (nybörjare vs erfarna investerare)",
+      "content_type": "Teman för olika innehållstyper (nyheter, analys, guider, intervjuer)"
+    }
+  }
+}
