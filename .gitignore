@@ -92,8 +92,16 @@ simple_test_error.json
 # API tokens and config (keep templates)
 crewai-config.json
 config.yaml
+.env
 
-# Temporary and test files
+# Temporary and test files  
 temp_*
 test_*
-*_temp.* 
+*_temp.*
+
+# Content generation output that shouldn't be committed
+output/
+staging/
+
+# Keep preview templates but ignore auto-generated ones
+previews/*-auto-*.html 

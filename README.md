@@ -1,290 +1,213 @@
-# PayPro.se - Betalningar & Ekonomi Analysplattform
+# PayPro.se Content Generation System
 
-Ett komplett Next.js 14-projekt för analys av betalningar, ekonomi och finansiella trender i Sverige och globalt.
+Ett avancerat AI-drivet system för automatisk generering av högkvalitativt finansiellt innehåll för PayPro.se.
 
-## 🚀 Funktioner
+## 🏗 Arkitektur
 
-- **Startsida** med senaste artiklar och nyckeltal
-- **Interaktiva Dashboards** för makroekonomi, svenska betalningar och globala trender
-- **Blogg** med SEO-optimerade artiklar
-- **Responsiv design** med Tailwind CSS
-- **Datavisualisering** med Recharts
-- **SEO-optimerat** med sitemap, robots.txt och schema.org
+Detta är **content generation-delen** av PayPro.se's dubbla repository-struktur:
 
-## 📊 Dashboards
+- **Denna repository (Gitea)**: AI-baserad innehållsgenerering och utvecklingsverktyg
+- **Production repository (GitHub)**: Publicerad blogg som byggs automatiskt i Vercel
 
-### Makroekonomi (`/dashboards/makro`)
-- BNP-utveckling
-- Inflation (KPI)
-- Reporänta och ekonomiska nyckeltal
+### Systemdesign
+```
+Content Creation (Gitea)           Production Blog (GitHub)
+    ↓ AI Generation                     ↓ Auto-deploy
+    ↓ Preview System              →     ↓ Vercel Build
+    ↓ Quality Check                     ↓ paypro.se
+```
 
-### Svenska Betalningar (`/dashboards/swish`)
-- Swish-statistik och tillväxt
-- Betalningsmetoder marknadsandel
-- Transaktionsvolymer
+## 🎯 Funktioner
 
-### Globala Trender (`/dashboards/global`)
-- Digital betalningsadoption
-- CBDC-utveckling
-- Kryptovaluta handelsvolymer
+### Innehållsgenerering
+- **Multi-agent AI-system** för komplex innehållsskapande
+- **6 specialiserade agenter**: Makroekonom, Kryptoanalytiker, SEO-skribent, Bildkonstnär, Redaktör, HTML-formatterar
+- **API V2-integration** mot extern CrewAI-server
+- **Produktionskvalitet** artiklar på svenska
+
+### Preview-system
+- **Standardiserad preview** som matchar produktionsmiljön
+- **Automatisk HTML-generering** för artikelförhandsgranskning
+- **Responsiv design** med PayPro.se-branding
+- **SEO-optimerat** innehåll redo för publicering
+
+### Utvecklingsverktyg
+- **CLI-verktyg** för systemhantering
+- **API-klient** för kommunikation med CrewAI-servern
+- **Konfigurationsmallar** för enkel uppsättning
+- **Dokumentation** för hela systemet
+
+## 📊 Genererat Innehåll
+
+Systemet kan generera:
+- **Finansiella analyser** (makroekonomi, kryptovalutor)
+- **Marknadstrender** och prognoser
+- **Regulatoriska analyser** (EU MiCA, svenska regler)
+- **Tekniska analyser** av fintech-utveckling
+- **SEO-optimerade** artiklar för PayPro.se
 
 ## 🛠 Teknisk Stack
 
-- **Framework:** Next.js 14 med TypeScript
-- **Styling:** Tailwind CSS
-- **Charts:** Recharts
-- **Content:** MDX för bloggartiklar
-- **SEO:** Built-in optimering
+### AI & Integration
+- **CrewAI API V2** för multi-agent orchestration
+- **OpenAI GPT-4/GPT-4o-mini** som språkmodeller
+- **RESTful API-klient** för systemkommunikation
+- **JSON-konfiguration** för flexibel systemuppsättning
 
-## 🏃‍♂️ Kom igång
+### Development Tools
+- **Python 3.11+** huvudspråk
+- **Requests** för API-kommunikation
+- **JSON Schema** för datavalidering
+- **CLI-interface** för utvecklarproduktivitet
+
+### Output Format
+- **Semantic HTML5** för artikelstruktur
+- **CSS3** för responsiv styling
+- **Meta-data** för SEO-optimering
+- **PayPro.se-branding** för konsistent design
+
+## 🚀 Kom igång
+
+### Förutsättningar
+- Python 3.11 eller senare
+- Tillgång till CrewAI-servern (172.16.16.148:8088)
+- API-nycklar för OpenAI
 
 ### Installation
 ```bash
-npm install
+# Installera dependencies
+pip install -r requirements.txt
+
+# Kopiera konfiguration
+cp env.example .env
+cp crewai-config-template.json crewai-config.json
+
+# Konfigurera API-inställningar
+# Redigera .env och crewai-config.json
 ```
 
-### Utveckling
+### Grundläggande användning
 ```bash
-npm run dev
-```
-Öppna [http://localhost:6388](http://localhost:6388) i din webbläsare.
+# Skapa agenter
+python create_agents_v2.py
 
-### Bygg för produktion
-```bash
-npm run build
-npm start
+# Generera innehåll
+python final_production_run.py
+
+# Förhandsgranska resultat
+python open_preview.py
 ```
 
 ## 📁 Projektstruktur
 
 ```
-paypro-se/
-├── pages/
-│   ├── index.tsx                    # Startsida
-│   ├── _app.tsx                     # App wrapper
-│   ├── blog/
-│   │   ├── index.tsx                # Blogg lista
-│   │   └── [slug].tsx               # Individuell artikel
-│   └── dashboards/
-│       ├── makro.tsx                # Makroekonomi dashboard
-│       ├── swish.tsx                # Svenska betalningar
-│       └── global.tsx               # Globala trender
-├── components/
-│   ├── layout/
-│   │   ├── Header.tsx               # Huvudnavigation
-│   │   └── Footer.tsx               # Footer
-│   ├── blog/
-│   │   └── BlogCard.tsx             # Bloggkort
-│   └── dashboards/
-│       ├── ChartCard.tsx            # Chart wrapper
-│       └── MetricBox.tsx            # Nyckeltal display
-├── lib/
-│   └── dataFetcher.ts               # Data management
-├── styles/
-│   └── globals.css                  # Global styles
-├── public/
-│   ├── robots.txt                   # SEO
-│   └── sitemap.xml                  # Sitemap
-└── content/
-    └── blog/                        # MDX artiklar (framtida)
+paypro-se-content/
+├── scripts/
+│   ├── create_agents_v2.py      # Skapa AI-agenter
+│   ├── final_production_run.py  # Huvudproduktionsscript
+│   └── open_preview.py          # Öppna preview
+├── previews/
+│   └── *.html                   # Förhandsgranskningar
+├── config/
+│   ├── crewai-config.json       # AI-systemkonfiguration
+│   └── env.example              # Miljövariabel-mall
+├── docs/
+│   ├── crewai-api-dokumentatio.md  # API-dokumentation
+│   └── CREW_CONFIG_GUIDE.md     # Konfigurationsguide
+├── output/
+│   ├── *.html                   # Genererade artiklar
+│   └── *.json                   # Strukturerad data
+└── lib/
+    ├── api_client.py            # API-kommunikation
+    └── config.py                # Systemkonfiguration
 ```
-
-## 📝 Innehåll
-
-### Bloggartiklar
-Projektet inkluderar mock-data för tre huvudartiklar:
-- Sveriges betalningslandskap 2024
-- Riksbankens räntebeslut analys
-- Globala betaltrender
-
-### Data
-Mock-data inkluderar:
-- BNP och inflationsstatistik
-- Swish transaktionsdata
-- Globala betalningsnummer
-- CBDC utvecklingsstatus
-
-## 🌐 Deployment
-
-Projektet är redo för deployment på Vercel:
-
-1. Pusha till GitHub
-2. Anslut repository till Vercel
-3. Sätt domän till `paypro.se`
-
-### Miljövariabler
-Inga speciella miljövariabler krävs för grundfunktionaliteten.
 
 ## 🔧 Konfiguration
 
-### Tailwind CSS
-Anpassad färgpalett för PayPro-branding i `tailwind.config.js`.
+### AI-agenter
+Systemet använder 6 specialiserade agenter:
+- **Makroekonom**: Ekonomisk analys och prognoser
+- **Kryptoanalytiker**: Blockchain och kryptovaluta-expertis
+- **SEO-skribent**: Sökoptimerat innehåll
+- **Bildkonstnär**: Visuell gestaltning och layout
+- **Redaktör**: Kvalitetskontroll och korrekturläsning
+- **HTML-formatterar**: Teknisk implementation
 
-### TypeScript
-Strikta inställningar med alias för enklare imports (`@/`).
+### API-konfiguration
+```json
+{
+  "base_url": "http://172.16.16.148:8088",
+  "timeout": 30,
+  "models": {
+    "primary": "openai:gpt-4",
+    "secondary": "openai:gpt-4o-mini"
+  }
+}
+```
 
-### SEO
-- Automatisk sitemap generering
-- Open Graph metadata
-- Schema.org strukturerad data
-- Robots.txt konfiguration
+## 📝 Innehållsprocess
 
-## 📱 Responsive Design
+### 1. Innehållsplanering
+- Ämnesidentifiering baserat på PayPro.se-fokus
+- Nyckelordsresearch för SEO-optimering
+- Målgruppsanalys för svenska finansmarknaden
 
-Fullständigt responsiv design för:
-- Mobil (320px+)
-- Tablet (768px+)
-- Desktop (1024px+)
+### 2. AI-generering
+- Multi-agent koordination för innehållsskapande
+- Kvalitetskontroll genom specialiserade agenter
+- Automatisk SEO-optimering och formattering
 
-## 🎨 Design System
+### 3. Preview & kvalitetskontroll
+- Standardiserad preview som matchar produktionsdesign
+- Responsivitetstestning för olika enheter
+- Innehållsvalidering innan publicering
 
-- **Färger:** PayPro blå som primärfärg
-- **Typografi:** System fonts för prestanda
-- **Komponenter:** Återanvändbara UI-element
-- **Layout:** CSS Grid och Flexbox
+### 4. Publiceringsförbereding
+- HTML-export redo för GitHub-repository
+- Meta-data och SEO-taggar inkluderade
+- PayPro.se-branding och styling applicerad
 
-## 🚀 Framtida Utveckling
+## 🌐 Integration med produktionssystemet
 
-- [ ] Äkta API-integration
-- [ ] MDX-innehållshantering
-- [ ] Användarkonton
-- [ ] Dashboard-filter
-- [ ] Newsletterintegrationer
-- [ ] A/B-testning
+### Workflow
+1. **Generera innehåll** i denna miljö (Gitea)
+2. **Förhandsgranska** med standardiserat preview-system
+3. **Exportera** färdigt innehåll till GitHub-repository
+4. **Auto-deploy** via Vercel till paypro.se
 
-## 📄 Licens
+### Säkerhet
+- API-nycklar och känslig konfiguration stannar i Gitea
+- Enbart färdigt innehåll flyttas till public GitHub
+- Separation mellan utveckling och produktion
 
-Detta projekt är skapat för PayPro.se.
+## 📈 Systemstatistik
+
+### Innehållskvalitet
+- **10,000+** tecken per genererad artikel
+- **2,400+** ord genomsnittlig artikellängd
+- **6** strukturerade sektioner per artikel
+- **SEO-optimerat** för svenska söktermer
+
+### Teknisk prestanda
+- **API V2** med förbättrad stabilitet
+- **Multi-agent** koordination för kvalitet
+- **Responsiv design** för alla enheter
+- **Automatiserad pipeline** för effektivitet
+
+## 🔒 Säkerhet & Compliance
+
+- **Privat repository** för känslig utvecklingskod
+- **API-nyckelhantering** via miljövariabler
+- **Separerad arkitektur** för säker produktion
+- **Dokumenterad process** för revision och compliance
+
+## 📞 Support & Utveckling
+
+För frågor om systemet:
+- Kontakta utvecklingsteamet
+- Se dokumentation i `/docs`
+- Använd CLI-verktyg för felsökning
 
 ---
 
-**Kontakt:** För frågor om projektet, kontakta utvecklingsteamet.
-
-## CrewAI CLI Tool
-
-A Python CLI tool for interacting with CrewAI Studio API.
-
-### Installation
-
-1. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-2. Copy environment configuration:
-```bash
-cp env.example .env
-```
-
-3. Edit `.env` to match your CrewAI API setup:
-```
-CREWAI_BASE_URL=http://127.0.0.1
-CREWAI_PORT=8088
-CREWAI_TIMEOUT=30
-```
-
-### Usage
-
-#### Basic Commands
-
-```bash
-# Check API status
-python crewctl.py status
-
-# List resources
-python crewctl.py list agents
-python crewctl.py list crews
-python crewctl.py list tools
-
-# Show configuration
-python crewctl.py config-info
-```
-
-#### Creating Agents
-
-```bash
-# Create agent manually
-python crewctl.py create agent \
-  --name "Blog Writer" \
-  --role "Content Creator" \
-  --goal "Write engaging blog posts" \
-  --backstory "Expert content writer"
-
-# Create agent from preset
-python crewctl.py create agent --preset blog_writer
-
-# Dry run (show what would be created)
-python crewctl.py create agent --preset blog_writer --dry-run
-```
-
-#### Creating Crews
-
-```bash
-# Create crew
-python crewctl.py create crew \
-  --name "Blog Team" \
-  --description "Complete blog workflow" \
-  --agent-ids 1 --agent-ids 2
-
-# Create from preset
-python crewctl.py create crew --preset blog_production
-```
-
-#### Running Crews
-
-```bash
-# Run crew and wait for results
-python crewctl.py run 1
-```
-
-#### Content Preview
-
-```bash
-# Generate preview
-python crewctl.py preview \
-  --content "# My Blog Post\n\nContent here..." \
-  --title "My Blog Post"
-
-# Preview without opening browser
-python crewctl.py preview \
-  --content "# Test\n\nTest content" \
-  --no-open
-```
-
-### Configuration
-
-The tool uses `config.yaml` for agent and crew presets. Example:
-
-```yaml
-agents:
-  blog_writer:
-    name: "Blog Writer"
-    role: "Content Creator"
-    goal: "Create engaging blog posts"
-    # ... more fields
-```
-
-### Directory Structure
-
-- `crewctl.py` - Main CLI entry point
-- `api_client.py` - API interaction functions  
-- `config.py` - Configuration management
-- `preview.py` - HTML preview generation
-- `config.yaml` - Agent/crew presets
-- `previews/` - Generated HTML previews (gitignored)
-- `staging/` - Markdown staging files (gitignored)
-
----
-
-## Next.js Application
-
-The main PayPro SE web application built with Next.js, TailwindCSS, and TypeScript.
-
-### Development
-
-```bash
-npm install
-npm run dev
-```
-
-Visit `http://localhost:3000` to view the application. 
+**Detta är content generation-systemet för PayPro.se** | Privat utvecklingsmiljö | Gitea-hosted 
