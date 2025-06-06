@@ -15,9 +15,9 @@ def create_production_preview(
     title: str,
     content: str,
     description: str = "",
-    author: str = "PayPro.se Redaktion",
-    category: str = "Finansanalys & Marknadstrender",
-    reading_time: str = "8-10 minuter",
+    author: str = "PayPro.se Editorial Team",
+    category: str = "Financial Analysis & Market Trends",
+    reading_time: str = "8-10 minutes",
     word_count: str = "2,400",
     output_dir: str = "previews"
 ) -> str:
@@ -45,11 +45,11 @@ def create_production_preview(
     slug = create_slug(title)
     
     # Nuvarande datum
-    current_date = datetime.now().strftime("%d %B %Y")
+    current_date = datetime.now().strftime("%B %d, %Y")
     iso_date = datetime.now().strftime("%Y-%m-%d")
     
     html_template = f"""<!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -215,7 +215,7 @@ def create_production_preview(
 <body>
     <article>
         <div class="preview-note">
-            <strong>FÖRHANDSVISNING</strong> • Artikel under granskning • PayPro.se
+            <strong>PREVIEW</strong> • Article under review • PayPro.se
         </div>
         
         <header>
@@ -223,19 +223,19 @@ def create_production_preview(
             <p class="subtitle">{description}</p>
             <time datetime="{iso_date}">{current_date}</time>
             <div class="meta-info">
-                Av <span class="author">{author}</span> • {category}
+                By <span class="author">{author}</span> • {category}
             </div>
         </header>
 
         <div class="reading-time">
-            Lästid: <span class="time">{reading_time}</span> • {word_count} ord • Expertanalys
+            Reading time: <span class="time">{reading_time}</span> • {word_count} words • Expert analysis
         </div>
 
         {content}
 
         <footer>
-            <p><strong>PayPro.se</strong> • Sveriges ledande källa för betalningar och finansiell teknologi</p>
-            <p>© 2025 PayPro.se • Alla rättigheter förbehållna</p>
+            <p><strong>PayPro.se</strong> • Sweden's leading source for payments and financial technology</p>
+            <p>© 2025 PayPro.se • All rights reserved</p>
         </footer>
     </article>
 </body>
