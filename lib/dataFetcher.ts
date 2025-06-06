@@ -95,6 +95,15 @@ export async function fetchBlogPosts(): Promise<BlogPost[]> {
   // In a real app, this would fetch from an API or read MDX files
   return [
     {
+      slug: 'robinhood-bitstamp-acquisition-analysis',
+      title: 'Robinhood\'s Strategic Acquisition of Bitstamp: Implications for Cryptocurrency Regulation and European Expansion',
+      date: '2025-01-06',
+      excerpt: 'In-depth analysis of Robinhood\'s acquisition of Bitstamp and its impact on cryptocurrency markets, regulation, and institutional adoption in Europe.',
+      content: '',
+      tags: ['cryptocurrency', 'robinhood', 'bitstamp', 'regulation', 'europe'],
+      readingTime: '8-10 min'
+    },
+    {
       slug: 'sveriges-betalningslandskap-2024',
       title: 'Sveriges betalningslandskap 2024: Swish dominerar allt mer',
       date: '2024-12-20',
