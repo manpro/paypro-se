@@ -364,22 +364,50 @@ const SverigeMakroDashboard = () => {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Datakällor och Notiser - Sveriges Ekonomi
             </h3>
+            
+            {/* CORS Information */}
+            <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <h4 className="text-sm font-medium text-yellow-800">
+                    Information om datavisning
+                  </h4>
+                  <div className="mt-2 text-sm text-yellow-700">
+                    <p>
+                      Data som visas är <strong>realistiska simulerade värden</strong> baserade på verkliga svenska ekonomiska siffror. 
+                      På grund av CORS-säkerhetsbegränsningar kan externa API:er (SCB, Riksbanken) inte anropas direkt från webbläsaren.
+                    </p>
+                    <p className="mt-2">
+                      <strong>För riktig live data krävs:</strong> Backend API-proxy eller server-side data fetching.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
             <div className="prose prose-sm text-gray-600">
               <ul>
-                <li><strong>BNP-data:</strong> Statistiska Centralbyrån (SCB), 
+                <li><strong>BNP-data:</strong> Baserat på Statistiska Centralbyrån (SCB), 
                     kvartalsvisa nationalräkenskaper för Sverige</li>
-                <li><strong>Inflation:</strong> Statistiska Centralbyrån (SCB), 
+                <li><strong>Inflation:</strong> Baserat på Statistiska Centralbyrån (SCB), 
                     konsumentprisindex (KPI) för Sverige</li>
-                <li><strong>Arbetslöshet:</strong> Statistiska Centralbyrån (SCB), 
+                <li><strong>Arbetslöshet:</strong> Baserat på Statistiska Centralbyrån (SCB), 
                     arbetskraftsundersökningen (AKU)</li>
-                <li><strong>Bostadspriser:</strong> Statistiska Centralbyrån (SCB), 
+                <li><strong>Bostadspriser:</strong> Baserat på Statistiska Centralbyrån (SCB), 
                     fastighetsprisindex för Sverige</li>
-                <li><strong>Reporänta:</strong> Sveriges Riksbank, 
-                    penningpolitiska beslut</li>
-                <li><strong>Valutakurser:</strong> Sveriges Riksbank, 
-                    dagliga valutakurser</li>
-                <li><strong>Uppdateringsfrekvens:</strong> Live data uppdateras var 30:e sekund, 
-                    diagram uppdateras var 5:e minut</li>
+                <li><strong>Reporänta:</strong> Baserat på Sveriges Riksbank, 
+                    penningpolitiska beslut (aktuell: 2,75%)</li>
+                <li><strong>Valutakurser:</strong> Baserat på Sveriges Riksbank, 
+                    dagliga valutakurser (SEK/EUR: ~11,58)</li>
+                <li><strong>Uppdateringsfrekvens:</strong> Simulerad live data uppdateras var 30:e sekund, 
+                    diagram uppdateras var 5:e minut med små variationer</li>
+                <li><strong>Teknisk notering:</strong> För produktion behöver externa API-anrop göras 
+                    via backend-server för att undvika CORS-problem</li>
               </ul>
             </div>
           </div>
