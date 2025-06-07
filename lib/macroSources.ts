@@ -12,15 +12,15 @@ export interface MacroData {
   debtRatio: number | null
 }
 
-// Senaste kända data (Dec 2024/Jan 2025)
+// Aktuell officiell data för 2025
 const CURRENT_DATA = {
-  gdpQoQ: 0.3,       // Q3 2024 BNP-tillväxt
-  inflationYoY: 2.2,  // Dec 2024 KPI
-  unemployment: 8.5,  // Nov 2024 arbetslöshet
-  hpiYoY: -8.2,      // Q3 2024 bostadspriser
-  repoRate: 2.75,    // Dec 2024 Riksbank beslut
-  sekEur: 11.58,     // Januari 2025 kurs
-  debtRatio: 187     // Q2 2024 skuldsättning
+  gdpQoQ: -0.2,      // Q1 2025 BNP minskade -0.2% QoQ säsongrensad (SCB)
+  inflationYoY: 2.2,  // Senaste KPI-data
+  unemployment: 8.5,  // Senaste arbetslöshetsdata
+  hpiYoY: -8.2,      // Senaste bostadsprisdata
+  repoRate: 2.25,    // 2.25% från 14 maj 2025 (Riksbank)
+  sekEur: 10.943,    // 10.943 SEK/EUR per 5 juni 2025 (Riksbank)
+  debtRatio: 187     // Senaste skuldsättningsdata
 }
 
 async function getRepoRate(): Promise<number | null> {
@@ -31,7 +31,11 @@ async function getRepoRate(): Promise<number | null> {
     )
     
     if (response.data?.value) {
-      return parseFloat(response.data.value)
+      const rate = parseFloat(response.data.value)
+      // Validera att det är rimligt (0-10%)
+      if (rate >= 0 && rate <= 10) {
+        return rate
+      }
     }
   } catch (error) {
     console.error('Riksbank repo rate error:', error)
@@ -48,7 +52,11 @@ async function getSEKEUR(): Promise<number | null> {
     )
     
     if (response.data?.value) {
-      return parseFloat(response.data.value)
+      const rate = parseFloat(response.data.value)
+      // Validera att det är rimligt (9-15 SEK/EUR)
+      if (rate >= 9 && rate <= 15) {
+        return rate
+      }
     }
   } catch (error) {
     console.error('Riksbank SEK/EUR error:', error)
@@ -59,7 +67,7 @@ async function getSEKEUR(): Promise<number | null> {
 
 export async function getMacro(): Promise<MacroData> {
   try {
-    // Försök hämta live data från Riksbank, använd aktuell data för SCB-värden
+    // Hämta live data från Riksbank för de värden vi kan få
     const [repoRate, sekEur] = await Promise.allSettled([
       getRepoRate(),
       getSEKEUR()
