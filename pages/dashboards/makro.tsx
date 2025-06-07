@@ -1,44 +1,119 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import Head from 'next/head'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import ChartCard from '@/components/dashboards/ChartCard'
 import MetricBox from '@/components/dashboards/MetricBox'
-import { fetchEconomicData, fetchKeyMetrics, EconomicData, MetricData } from '@/lib/dataFetcher'
+import { fetchEconomicData, fetchKeyMetrics, fetchLiveEconomicData, EconomicData, MetricData } from '@/lib/dataFetcher'
 
-const MakroDashboard = () => {
+const SverigeMakroDashboard = () => {
   const [gdpData, setGdpData] = useState<EconomicData[]>([])
   const [inflationData, setInflationData] = useState<EconomicData[]>([])
+  const [unemploymentData, setUnemploymentData] = useState<EconomicData[]>([])
+  const [housePriceData, setHousePriceData] = useState<EconomicData[]>([])
   const [keyMetrics, setKeyMetrics] = useState<MetricData[]>([])
+  const [liveData, setLiveData] = useState({
+    repoRate: 4.00,
+    exchangeRate: 11.42,
+    debtRatio: 185,
+    timestamp: new Date().toISOString()
+  })
   const [loading, setLoading] = useState(true)
+  const [lastUpdated, setLastUpdated] = useState(new Date())
+  const [isAutoUpdating, setIsAutoUpdating] = useState(true)
+
+  // Load initial data
+  const loadAllData = useCallback(async () => {
+    try {
+      const [gdp, inflation, unemployment, housePrice, metrics, live] = await Promise.all([
+        fetchEconomicData('gdp'),
+        fetchEconomicData('inflation'),
+        fetchEconomicData('unemployment'),
+        fetchEconomicData('house_prices'),
+        fetchKeyMetrics(),
+        fetchLiveEconomicData()
+      ])
+      
+      setGdpData(gdp)
+      setInflationData(inflation)
+      setUnemploymentData(unemployment)
+      setHousePriceData(housePrice)
+      setKeyMetrics(metrics)
+      setLiveData(live)
+      setLastUpdated(new Date())
+    } catch (error) {
+      console.error('Error loading Swedish macro data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // Load live data only (for frequent updates)
+  const loadLiveData = useCallback(async () => {
+    if (!isAutoUpdating) return
+    try {
+      const [live, metrics] = await Promise.all([
+        fetchLiveEconomicData(),
+        fetchKeyMetrics()
+      ])
+      setLiveData(live)
+      setKeyMetrics(metrics)
+      setLastUpdated(new Date())
+    } catch (error) {
+      console.error('Error updating live data:', error)
+    }
+  }, [isAutoUpdating])
+
+  // Load chart data (less frequent updates)
+  const loadChartData = useCallback(async () => {
+    if (!isAutoUpdating) return
+    try {
+      const [gdp, inflation, unemployment, housePrice] = await Promise.all([
+        fetchEconomicData('gdp'),
+        fetchEconomicData('inflation'),
+        fetchEconomicData('unemployment'),
+        fetchEconomicData('house_prices')
+      ])
+      
+      setGdpData(gdp)
+      setInflationData(inflation)
+      setUnemploymentData(unemployment)
+      setHousePriceData(housePrice)
+      setLastUpdated(new Date())
+    } catch (error) {
+      console.error('Error updating chart data:', error)
+    }
+  }, [isAutoUpdating])
 
   useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [gdp, inflation, metrics] = await Promise.all([
-          fetchEconomicData('gdp'),
-          fetchEconomicData('inflation'),
-          fetchKeyMetrics()
-        ])
-        setGdpData(gdp)
-        setInflationData(inflation)
-        setKeyMetrics(metrics.slice(0, 3)) // Show first 3 metrics
-      } catch (error) {
-        console.error('Error loading macro data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+    // Load all data initially
+    loadAllData()
 
-    loadData()
-  }, [])
+    // Set up automatic updates with different intervals
+    const liveDataInterval = setInterval(loadLiveData, 30000) // 30 seconds
+    const chartDataInterval = setInterval(loadChartData, 300000) // 5 minutes
+
+    return () => {
+      clearInterval(liveDataInterval)
+      clearInterval(chartDataInterval)
+    }
+  }, [loadAllData, loadLiveData, loadChartData])
+
+  const toggleAutoUpdate = () => {
+    setIsAutoUpdating(!isAutoUpdating)
+  }
+
+  const manualRefresh = () => {
+    setLoading(true)
+    loadAllData()
+  }
 
   return (
     <>
       <Head>
-        <title>Makroekonomi Dashboard - PayPro.se</title>
-        <meta name="description" content="Svenska ekonomiska nyckeltal och makroekonomisk analys i realtid." />
+        <title>Sveriges Makroekonomi Dashboard - PayPro.se</title>
+        <meta name="description" content="Sveriges ekonomiska nyckeltal och makroekonomisk analys i realtid - BNP, inflation, arbetslöshet och bostadspriser." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -49,15 +124,54 @@ const MakroDashboard = () => {
         <div className="container-custom">
           {/* Page Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Makroekonomi Dashboard</h1>
-            <p className="text-lg text-gray-600">Svenska ekonomiska nyckeltal och trender</p>
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  🇸🇪 Sveriges Makroekonomi Dashboard
+                </h1>
+                <p className="text-lg text-gray-600">
+                  Kompletta ekonomiska nyckeltal och trender för den svenska ekonomin
+                </p>
+              </div>
+              
+              {/* Auto-update controls */}
+              <div className="flex flex-col items-end space-y-2">
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={toggleAutoUpdate}
+                    className={`px-3 py-1 text-sm rounded-full flex items-center space-x-2 ${
+                      isAutoUpdating 
+                        ? 'bg-green-100 text-green-800' 
+                        : 'bg-gray-100 text-gray-600'
+                    }`}
+                  >
+                    <div className={`w-2 h-2 rounded-full ${
+                      isAutoUpdating ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
+                    }`}></div>
+                    <span>{isAutoUpdating ? 'Live' : 'Pausad'}</span>
+                  </button>
+                  
+                  <button
+                    onClick={manualRefresh}
+                    disabled={loading}
+                    className="px-3 py-1 text-sm bg-paypro-600 text-white rounded hover:bg-paypro-700 disabled:opacity-50"
+                  >
+                    {loading ? 'Uppdaterar...' : 'Uppdatera'}
+                  </button>
+                </div>
+                
+                <div className="text-sm text-gray-500">
+                  Senast uppdaterad: {lastUpdated.toLocaleString('sv-SE')}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {loading ? (
               <>
-                {[1, 2, 3].map((i) => (
+                {[1, 2, 3, 4].map((i) => (
                   <div key={i} className="metric-box animate-pulse">
                     <div className="h-4 bg-gray-300 rounded mb-2"></div>
                     <div className="h-8 bg-gray-300 rounded mb-2"></div>
@@ -72,11 +186,11 @@ const MakroDashboard = () => {
             )}
           </div>
 
-          {/* Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Charts Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* GDP Chart */}
             <ChartCard
-              title="BNP Utveckling"
+              title="BNP Utveckling Sverige"
               description="Bruttonationalprodukt i miljoner SEK, kvartalstakt"
             >
               {loading ? (
@@ -90,7 +204,7 @@ const MakroDashboard = () => {
                     <XAxis dataKey="period" />
                     <YAxis />
                     <Tooltip 
-                      formatter={(value: number) => [`${value.toLocaleString()} MSEK`, 'BNP']}
+                      formatter={(value: number) => [`${value.toLocaleString('sv-SE')} MSEK`, 'BNP']}
                       labelStyle={{ color: '#374151' }}
                     />
                     <Line 
@@ -107,7 +221,7 @@ const MakroDashboard = () => {
 
             {/* Inflation Chart */}
             <ChartCard
-              title="Inflation (KPI)"
+              title="Inflation Sverige (KPI)"
               description="Konsumentprisindex, årlig procentuell förändring"
             >
               {loading ? (
@@ -121,7 +235,7 @@ const MakroDashboard = () => {
                     <XAxis dataKey="period" />
                     <YAxis />
                     <Tooltip 
-                      formatter={(value: number) => [`${value}%`, 'Inflation']}
+                      formatter={(value: number) => [`${value.toFixed(1)}%`, 'Inflation']}
                       labelStyle={{ color: '#374151' }}
                     />
                     <Line 
@@ -135,17 +249,137 @@ const MakroDashboard = () => {
                 </ResponsiveContainer>
               )}
             </ChartCard>
+
+            {/* Unemployment Chart */}
+            <ChartCard
+              title="Arbetslöshet Sverige"
+              description="Arbetslöshet som andel av arbetskraften, procent"
+            >
+              {loading ? (
+                <div className="h-full flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-paypro-600"></div>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={unemploymentData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="period" />
+                    <YAxis />
+                    <Tooltip 
+                      formatter={(value: number) => [`${value.toFixed(1)}%`, 'Arbetslöshet']}
+                      labelStyle={{ color: '#374151' }}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="value" 
+                      stroke="#f59e0b" 
+                      strokeWidth={3}
+                      dot={{ fill: '#f59e0b', strokeWidth: 2, r: 4 }}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
+            </ChartCard>
+
+            {/* House Prices Chart */}
+            <ChartCard
+              title="Bostadspriser Sverige"
+              description="Fastighetsprisindex, årlig procentuell förändring"
+            >
+              {loading ? (
+                <div className="h-full flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-paypro-600"></div>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={housePriceData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="period" />
+                    <YAxis />
+                    <Tooltip 
+                      formatter={(value: number) => [`${value.toFixed(1)}%`, 'Prisförändring']}
+                      labelStyle={{ color: '#374151' }}
+                    />
+                    <Bar 
+                      dataKey="value" 
+                      fill="#10b981"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </ChartCard>
+          </div>
+
+          {/* Live Swedish Economic Indicators */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <div className="card relative">
+              <div className="absolute top-3 right-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Riksbankens Reporänta
+              </h3>
+              <div className="text-3xl font-bold text-paypro-600 mb-2">
+                {liveData.repoRate.toFixed(2)}%
+              </div>
+              <p className="text-sm text-gray-600">
+                Senaste beslut från Sveriges Riksbank
+              </p>
+            </div>
+
+            <div className="card relative">
+              <div className="absolute top-3 right-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Kronkurs (SEK/EUR)
+              </h3>
+              <div className="text-3xl font-bold text-paypro-600 mb-2">
+                {liveData.exchangeRate.toFixed(2)}
+              </div>
+              <p className="text-sm text-gray-600">
+                Svenska kronor per euro
+              </p>
+            </div>
+
+            <div className="card relative">
+              <div className="absolute top-3 right-3">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Skuldsättningsgrad
+              </h3>
+              <div className="text-3xl font-bold text-paypro-600 mb-2">
+                {liveData.debtRatio.toFixed(0)}%
+              </div>
+              <p className="text-sm text-gray-600">
+                Hushållens skulder som andel av disponibel inkomst
+              </p>
+            </div>
           </div>
 
           {/* Data Sources */}
-          <div className="mt-8 card">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Datakällor och Notiser</h3>
+          <div className="card">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Datakällor och Notiser - Sveriges Ekonomi
+            </h3>
             <div className="prose prose-sm text-gray-600">
               <ul>
-                <li><strong>BNP-data:</strong> Statistiska Centralbyrån (SCB), kvartalsvisa nationalräkenskaper</li>
-                <li><strong>Inflation:</strong> Statistiska Centralbyrån (SCB), konsumentprisindex (KPI)</li>
-                <li><strong>Reporänta:</strong> Sveriges Riksbank, penningpolitiska beslut</li>
-                <li><strong>Uppdateringsfrekvens:</strong> Data uppdateras när nya officiella siffror publiceras</li>
+                <li><strong>BNP-data:</strong> Statistiska Centralbyrån (SCB), 
+                    kvartalsvisa nationalräkenskaper för Sverige</li>
+                <li><strong>Inflation:</strong> Statistiska Centralbyrån (SCB), 
+                    konsumentprisindex (KPI) för Sverige</li>
+                <li><strong>Arbetslöshet:</strong> Statistiska Centralbyrån (SCB), 
+                    arbetskraftsundersökningen (AKU)</li>
+                <li><strong>Bostadspriser:</strong> Statistiska Centralbyrån (SCB), 
+                    fastighetsprisindex för Sverige</li>
+                <li><strong>Reporänta:</strong> Sveriges Riksbank, 
+                    penningpolitiska beslut</li>
+                <li><strong>Valutakurser:</strong> Sveriges Riksbank, 
+                    dagliga valutakurser</li>
+                <li><strong>Uppdateringsfrekvens:</strong> Live data uppdateras var 30:e sekund, 
+                    diagram uppdateras var 5:e minut</li>
               </ul>
             </div>
           </div>
@@ -157,4 +391,4 @@ const MakroDashboard = () => {
   )
 }
 
-export default MakroDashboard 
+export default SverigeMakroDashboard 
