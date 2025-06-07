@@ -1,7 +1,7 @@
 import React from 'react'
 import Head from 'next/head'
 import useSWR from 'swr'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from 'recharts'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import ChartCard from '@/components/dashboards/ChartCard'
@@ -10,6 +10,33 @@ import { MacroData } from '@/lib/macroSources'
 import dayjs from 'dayjs'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
+
+// Mock historical data for charts
+const historicalGDP = [
+  { period: 'Q4 2023', value: 0.3 },
+  { period: 'Q1 2024', value: 0.6 },
+  { period: 'Q2 2024', value: 0.2 },
+  { period: 'Q3 2024', value: 0.3 },
+  { period: 'Q4 2024', value: 0.1 },
+  { period: 'Q1 2025', value: -0.2 },
+]
+
+const historicalInflation = [
+  { month: 'Jan', value: 3.1 },
+  { month: 'Feb', value: 2.9 },
+  { month: 'Mar', value: 2.7 },
+  { month: 'Apr', value: 2.5 },
+  { month: 'Maj', value: 2.3 },
+  { month: 'Jun', value: 2.2 },
+]
+
+const historicalRates = [
+  { month: 'Jan', repo: 2.75, sek_eur: 11.2, usd_sek: 11.5, usd_eur: 0.95 },
+  { month: 'Feb', repo: 2.75, sek_eur: 11.1, usd_sek: 11.6, usd_eur: 0.94 },
+  { month: 'Mar', repo: 2.5, sek_eur: 11.0, usd_sek: 11.7, usd_eur: 0.93 },
+  { month: 'Apr', repo: 2.5, sek_eur: 10.9, usd_sek: 11.8, usd_eur: 0.92 },
+  { month: 'Maj', repo: 2.25, sek_eur: 10.943, usd_sek: 11.75, usd_eur: 0.93 },
+]
 
 const SverigeMakroDashboard = () => {
   const { data: macroData, error, isLoading, mutate } = useSWR<MacroData>('/api/macro', fetcher, {
@@ -21,9 +48,9 @@ const SverigeMakroDashboard = () => {
   const loading = isLoading
   const hasError = error
 
-  const formatValue = (value: number | null, suffix: string = '') => {
+  const formatValue = (value: number | null, suffix: string = '', decimals: number = 2) => {
     if (value === null) return '⚠️'
-    return `${value.toFixed(1)}${suffix}`
+    return `${value.toFixed(decimals)}${suffix}`
   }
 
   const getChangeType = (value: number | null) => {
@@ -106,14 +133,14 @@ const SverigeMakroDashboard = () => {
                 <MetricBox
                   title="BNP Tillväxt"
                   value={formatValue(macroData?.gdpQoQ || null, '%')}
-                  change={macroData?.gdpQoQ ? `${macroData.gdpQoQ > 0 ? '+' : ''}${macroData.gdpQoQ.toFixed(1)}%` : undefined}
+                  change={macroData?.gdpQoQ ? `${macroData.gdpQoQ > 0 ? '+' : ''}${macroData.gdpQoQ.toFixed(2)}%` : undefined}
                   changeType={getChangeType(macroData?.gdpQoQ || null)}
                   description="Kvartal över kvartal"
                 />
                 <MetricBox
                   title="Inflation (KPI)"
                   value={formatValue(macroData?.inflationYoY || null, '%')}
-                  change={macroData?.inflationYoY ? `${macroData.inflationYoY > 0 ? '+' : ''}${macroData.inflationYoY.toFixed(1)}%` : undefined}
+                  change={macroData?.inflationYoY ? `${macroData.inflationYoY > 0 ? '+' : ''}${macroData.inflationYoY.toFixed(2)}%` : undefined}
                   changeType={getChangeType(macroData?.inflationYoY || null)}
                   description="Årlig förändring"
                 />
@@ -133,22 +160,87 @@ const SverigeMakroDashboard = () => {
             )}
           </div>
 
+          {/* Charts Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {/* GDP Growth Chart */}
+            <ChartCard title="BNP-tillväxt - Senaste kvartalen" description="Säsongrensad, kvartal över kvartal">
+              <ResponsiveContainer width="100%" height={250}>
+                <BarChart data={historicalGDP}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="period" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => [`${value}%`, 'BNP-tillväxt']} />
+                  <Bar dataKey="value" fill="#2563eb" />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartCard>
 
+            {/* Inflation Chart */}
+            <ChartCard title="Inflation (KPI) - Senaste månaderna" description="Årlig procentuell förändring">
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={historicalInflation}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => [`${value}%`, 'Inflation']} />
+                  <Line type="monotone" dataKey="value" stroke="#dc2626" strokeWidth={3} />
+                </LineChart>
+              </ResponsiveContainer>
+            </ChartCard>
+          </div>
+
+          {/* Currency & Rates Charts */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {/* Exchange Rates Chart */}
+            <ChartCard title="Växelkurser - Utveckling 2025" description="SEK/EUR och USD/SEK">
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={historicalRates}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip 
+                    formatter={(value, name) => {
+                      const labels: { [key: string]: string } = {
+                        'sek_eur': 'SEK/EUR',
+                        'usd_sek': 'USD/SEK'
+                      }
+                      return [`${value}`, labels[name] || name]
+                    }} 
+                  />
+                  <Line type="monotone" dataKey="sek_eur" stroke="#2563eb" strokeWidth={2} name="sek_eur" />
+                  <Line type="monotone" dataKey="usd_sek" stroke="#dc2626" strokeWidth={2} name="usd_sek" />
+                </LineChart>
+              </ResponsiveContainer>
+            </ChartCard>
+
+            {/* Interest Rate Chart */}
+            <ChartCard title="Reporänta - Utveckling 2025" description="Sveriges Riksbanks styrränta">
+              <ResponsiveContainer width="100%" height={250}>
+                <AreaChart data={historicalRates}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => [`${value}%`, 'Reporänta']} />
+                  <Area type="monotone" dataKey="repo" stroke="#059669" fill="#059669" fillOpacity={0.3} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartCard>
+          </div>
 
           {/* Live Swedish Economic Indicators */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
             <div className="card relative">
               <div className="absolute top-3 right-3">
                 <div className={`w-2 h-2 rounded-full ${hasError ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></div>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Riksbankens Reporänta
+                Reporänta
               </h3>
               <div className="text-3xl font-bold text-paypro-600 mb-2">
                 {formatValue(macroData?.repoRate || null, '%')}
               </div>
               <p className="text-sm text-gray-600">
-                Senaste beslut från Sveriges Riksbank
+                Sveriges Riksbank
               </p>
             </div>
 
@@ -157,10 +249,10 @@ const SverigeMakroDashboard = () => {
                 <div className={`w-2 h-2 rounded-full ${hasError ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></div>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Kronkurs (SEK/EUR)
+                SEK/EUR
               </h3>
               <div className="text-3xl font-bold text-paypro-600 mb-2">
-                {macroData?.sekEur ? macroData.sekEur.toFixed(2) : '⚠️'}
+                {formatValue(macroData?.sekEur || null)}
               </div>
               <p className="text-sm text-gray-600">
                 Svenska kronor per euro
@@ -172,13 +264,43 @@ const SverigeMakroDashboard = () => {
                 <div className={`w-2 h-2 rounded-full ${hasError ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></div>
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Skuldsättningsgrad
+                USD/SEK
+              </h3>
+              <div className="text-3xl font-bold text-paypro-600 mb-2">
+                {formatValue(macroData?.usdSek || null)}
+              </div>
+              <p className="text-sm text-gray-600">
+                US-dollar per svensk krona
+              </p>
+            </div>
+
+            <div className="card relative">
+              <div className="absolute top-3 right-3">
+                <div className={`w-2 h-2 rounded-full ${hasError ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                USD/EUR
+              </h3>
+              <div className="text-3xl font-bold text-paypro-600 mb-2">
+                {formatValue(macroData?.usdEur || null)}
+              </div>
+              <p className="text-sm text-gray-600">
+                US-dollar per euro
+              </p>
+            </div>
+
+            <div className="card relative">
+              <div className="absolute top-3 right-3">
+                <div className={`w-2 h-2 rounded-full ${hasError ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></div>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Skuldsättning
               </h3>
               <div className="text-3xl font-bold text-paypro-600 mb-2">
                 {formatValue(macroData?.debtRatio || null, '%')}
               </div>
               <p className="text-sm text-gray-600">
-                Hushållens skulder som andel av disponibel inkomst
+                Hushållsskulder/inkomst
               </p>
             </div>
           </div>
@@ -229,7 +351,7 @@ const SverigeMakroDashboard = () => {
                 <li><strong>Reporänta:</strong> Sveriges Riksbank, 
                     penningpolitiska beslut</li>
                 <li><strong>Valutakurser:</strong> Sveriges Riksbank, 
-                    dagliga valutakurser</li>
+                    dagliga valutakurser (SEK/EUR, USD/SEK, USD/EUR)</li>
                 <li><strong>Uppdateringsfrekvens:</strong> Live data uppdateras var 30:e sekund 
                     med 24h cache för de flesta indikatorer, 6h cache för valutakurser</li>
                 <li><strong>Felhantering:</strong> Vid API-fel visas ⚠️ och senast cachade värden används</li>
