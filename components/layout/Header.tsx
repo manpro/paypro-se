@@ -31,21 +31,7 @@ const Header = ({ locale }: HeaderProps) => {
   const navigation = [
     { name: t('nav.home'), href: getLocalizedHref('/') },
     { name: t('nav.blog'), href: getLocalizedHref('/blog') },
-    { 
-      name: t('nav.dashboards'), 
-      href: '#',
-      children: [
-        { name: t('nav.macro'), href: getLocalizedHref('/dashboards/makro') },
-        { 
-          name: currentLocale === 'sv' ? 'Svenska Betalningar' : 'Swedish Payments', 
-          href: getLocalizedHref('/dashboards/swish') 
-        },
-        { 
-          name: currentLocale === 'sv' ? 'Globala Trender' : 'Global Trends', 
-          href: getLocalizedHref('/dashboards/global') 
-        },
-      ]
-    },
+    { name: t('nav.macro'), href: getLocalizedHref('/dashboards/makro') },
   ]
 
   return (
@@ -64,35 +50,13 @@ const Header = ({ locale }: HeaderProps) => {
           <div className="hidden md:flex items-center space-x-8">
             <nav className="flex items-center space-x-8">
               {navigation.map((item) => (
-                <div key={item.name} className="relative group">
-                  {item.children ? (
-                    <>
-                      <button className="text-gray-700 hover:text-paypro-600 font-medium transition-colors">
-                        {item.name}
-                      </button>
-                      <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                        <div className="py-2">
-                          {item.children.map((child) => (
-                            <Link
-                              key={child.name}
-                              href={child.href}
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-paypro-50 hover:text-paypro-600"
-                            >
-                              {child.name}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className="text-gray-700 hover:text-paypro-600 font-medium transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                </div>
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="text-gray-700 hover:text-paypro-600 font-medium transition-colors"
+                >
+                  {item.name}
+                </Link>
               ))}
             </nav>
             
@@ -120,33 +84,14 @@ const Header = ({ locale }: HeaderProps) => {
           <div className="md:hidden py-4 border-t border-gray-200">
             <div className="space-y-2">
               {navigation.map((item) => (
-                <div key={item.name}>
-                  {item.children ? (
-                    <>
-                      <div className="px-3 py-2 text-sm font-medium text-gray-900">{item.name}</div>
-                      <div className="pl-6 space-y-1">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.name}
-                            href={child.href}
-                            className="block px-3 py-2 text-sm text-gray-600 hover:text-paypro-600"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            {child.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-paypro-600"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  )}
-                </div>
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="block px-3 py-2 text-sm font-medium text-gray-700 hover:text-paypro-600"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
               ))}
               
               {/* Mobile Language Switcher */}

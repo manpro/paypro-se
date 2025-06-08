@@ -46,7 +46,7 @@ export default function LanguageSwitcher({ currentLocale }: LanguageSwitcherProp
           }`}
           title={locale === 'sv' ? 'Byt till svenska' : 'Switch to English'}
         >
-          {locale === 'sv' ? '🇸🇪 Svenska' : '🇬🇧 English'}
+          {locale === 'sv' ? 'Svenska' : 'English'}
         </Link>
       ))}
     </div>
