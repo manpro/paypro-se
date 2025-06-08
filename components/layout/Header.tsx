@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Locale } from '@/i18n.config'
 import { getTranslation } from '@/lib/translations'
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 
 interface HeaderProps {
   locale?: Locale
@@ -60,39 +61,44 @@ const Header = ({ locale }: HeaderProps) => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <div key={item.name} className="relative group">
-                {item.children ? (
-                  <>
-                    <button className="text-gray-700 hover:text-paypro-600 font-medium transition-colors">
-                      {item.name}
-                    </button>
-                    <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                      <div className="py-2">
-                        {item.children.map((child) => (
-                          <Link
-                            key={child.name}
-                            href={child.href}
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-paypro-50 hover:text-paypro-600"
-                          >
-                            {child.name}
-                          </Link>
-                        ))}
+          <div className="hidden md:flex items-center space-x-8">
+            <nav className="flex items-center space-x-8">
+              {navigation.map((item) => (
+                <div key={item.name} className="relative group">
+                  {item.children ? (
+                    <>
+                      <button className="text-gray-700 hover:text-paypro-600 font-medium transition-colors">
+                        {item.name}
+                      </button>
+                      <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                        <div className="py-2">
+                          {item.children.map((child) => (
+                            <Link
+                              key={child.name}
+                              href={child.href}
+                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-paypro-50 hover:text-paypro-600"
+                            >
+                              {child.name}
+                            </Link>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  </>
-                ) : (
-                  <Link
-                    href={item.href}
-                    className="text-gray-700 hover:text-paypro-600 font-medium transition-colors"
-                  >
-                    {item.name}
-                  </Link>
-                )}
-              </div>
-            ))}
-          </nav>
+                    </>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className="text-gray-700 hover:text-paypro-600 font-medium transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </nav>
+            
+            {/* Language Switcher */}
+            <LanguageSwitcher currentLocale={currentLocale} />
+          </div>
 
           {/* Mobile menu button */}
           <button
@@ -142,6 +148,11 @@ const Header = ({ locale }: HeaderProps) => {
                   )}
                 </div>
               ))}
+              
+              {/* Mobile Language Switcher */}
+              <div className="px-3 py-2 border-t border-gray-200 mt-4 pt-4">
+                <LanguageSwitcher currentLocale={currentLocale} />
+              </div>
             </div>
           </div>
         )}

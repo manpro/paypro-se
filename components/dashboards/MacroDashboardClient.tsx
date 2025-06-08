@@ -5,7 +5,6 @@ import useSWR from 'swr'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from 'recharts'
 import ChartCard from '@/components/dashboards/ChartCard'
 import MetricBox from '@/components/dashboards/MetricBox'
-import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 import { MacroData } from '@/lib/macroSources'
 import { getTranslation } from '@/lib/translations'
 import { Locale } from '@/i18n.config'
@@ -101,26 +100,23 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
             </div>
             
             {/* Update controls */}
-            <div className="flex flex-col items-end space-y-2">
-              <LanguageSwitcher currentLocale={locale} />
-              <div className="flex items-center space-x-3">
-                <div className={`px-3 py-1 text-sm rounded-full flex items-center space-x-2 ${
-                  hasError ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
-                }`}>
-                  <div className={`w-2 h-2 rounded-full ${
-                    hasError ? 'bg-red-500' : 'bg-green-500 animate-pulse'
-                  }`}></div>
-                  <span>{hasError ? t('macro.error') : t('macro.live')}</span>
-                </div>
-                
-                <button
-                  onClick={manualRefresh}
-                  disabled={loading}
-                  className="px-3 py-1 text-sm bg-paypro-600 text-white rounded hover:bg-paypro-700 disabled:opacity-50"
-                >
-                  {loading ? t('macro.refreshing') : t('macro.refresh')}
-                </button>
+            <div className="flex items-center space-x-3">
+              <div className={`px-3 py-1 text-sm rounded-full flex items-center space-x-2 ${
+                hasError ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${
+                  hasError ? 'bg-red-500' : 'bg-green-500 animate-pulse'
+                }`}></div>
+                <span>{hasError ? t('macro.error') : t('macro.live')}</span>
               </div>
+              
+              <button
+                onClick={manualRefresh}
+                disabled={loading}
+                className="px-3 py-1 text-sm bg-paypro-600 text-white rounded hover:bg-paypro-700 disabled:opacity-50"
+              >
+                {loading ? t('macro.refreshing') : t('macro.refresh')}
+              </button>
             </div>
           </div>
         </div>

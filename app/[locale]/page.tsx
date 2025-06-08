@@ -2,7 +2,6 @@ import React from 'react'
 import Head from 'next/head'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 import { Locale, i18n } from '@/i18n.config'
 import { getTranslation } from '@/lib/translations'
 
@@ -32,10 +31,6 @@ export default function HomePage({ params }: { params: { locale: Locale } }) {
         <div className="container-custom">
           {/* Hero Section */}
           <div className="text-center mb-16">
-            <div className="flex justify-center mb-8">
-              <LanguageSwitcher currentLocale={locale} />
-            </div>
-            
             <h1 className="text-5xl font-bold text-gray-900 mb-6">
               {locale === 'sv' ? (
                 <>PayPro.se - <span className="text-paypro-600">Sveriges ekonomiska nav</span></>

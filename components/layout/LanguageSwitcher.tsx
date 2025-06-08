@@ -16,14 +16,20 @@ export default function LanguageSwitcher({ currentLocale }: LanguageSwitcherProp
     // Handle null pathname case
     if (!pathname) return locale === 'sv' ? '/' : '/en'
     
-    // Remove current locale from path
-    const pathWithoutLocale = pathname.replace(/^\/(sv|en)/, '') || '/'
+    let basePath = pathname
     
-    // Add new locale (except for default Swedish)
+    // Remove /en prefix if present
+    if (basePath.startsWith('/en')) {
+      basePath = basePath.substring(3) || '/'
+    }
+    
+    // Return appropriate path for target locale
     if (locale === 'sv') {
-      return pathWithoutLocale === '/' ? '/' : pathWithoutLocale
+      // Swedish is the default, no prefix needed
+      return basePath
     } else {
-      return `/en${pathWithoutLocale}`
+      // English needs /en prefix
+      return basePath === '/' ? '/en' : `/en${basePath}`
     }
   }
 
