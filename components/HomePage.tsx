@@ -1,45 +1,38 @@
-'use client'
-
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import MetricBox from '@/components/dashboards/MetricBox'
-import { fetchBlogPosts, fetchKeyMetrics, BlogPost, MetricData } from '@/lib/dataFetcher'
+import { fetchKeyMetrics, MetricData } from '@/lib/dataFetcher'
+import { getBlogPosts, BlogPost } from '@/lib/content'
 import { Locale } from '@/i18n.config'
 
 interface HomePageProps {
   locale: Locale
 }
 
-export default function HomePage({ locale }: HomePageProps) {
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([])
-  const [keyMetrics, setKeyMetrics] = useState<MetricData[]>([])
-  const [loading, setLoading] = useState(true)
+export default async function HomePage({ locale }: HomePageProps) {
+  let blogPosts: BlogPost[] = []
+  let keyMetrics: MetricData[] = []
+  let loading = false
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [posts, metrics] = await Promise.all([
-          fetchBlogPosts(),
-          fetchKeyMetrics(locale)
-        ])
-        setBlogPosts(posts.slice(0, 3)) // Show only latest 3 posts
-        setKeyMetrics(metrics)
-      } catch (error) {
-        console.error('Error loading homepage data:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    loadData()
-  }, [])
+  try {
+    const [posts, metrics] = await Promise.all([
+      getBlogPosts(locale),
+      fetchKeyMetrics(locale)
+    ])
+    blogPosts = posts.slice(0, 3) // Show only latest 3 posts
+    keyMetrics = metrics
+  } catch (error) {
+    console.error('Error loading homepage data:', error)
+    loading = true
+  }
 
   // Create locale-aware URLs
   const getLocalizedHref = (path: string) => {
     if (locale === 'en') {
       return path === '/' ? '/en' : `/en${path}`
     }
-    return path
+    // Both Swedish and English need locale prefixes
+    return path === '/' ? '/sv' : `/sv${path}`
   }
 
   return (
