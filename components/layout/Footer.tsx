@@ -67,11 +67,6 @@ const Footer = ({ locale }: FooterProps) => {
                   {t('nav.macro')}
                 </Link>
               </li>
-              <li>
-                <Link href={getLocalizedHref('/dashboards/swish')} className="text-gray-300 hover:text-white transition-colors">
-                  {locale === 'sv' ? 'Svenska Betalningar' : 'Swedish Payments'}
-                </Link>
-              </li>
             </ul>
           </div>
 
