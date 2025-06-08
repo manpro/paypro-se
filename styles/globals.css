@@ -21,6 +21,10 @@
     @apply inline-block px-8 py-3 bg-paypro-600 text-white font-semibold text-lg rounded-lg hover:bg-paypro-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl;
   }
   
+  .btn-primary-light {
+    @apply inline-block px-8 py-3 bg-white text-paypro-800 font-semibold text-lg rounded-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl border-2 border-white;
+  }
+  
   .btn-secondary {
     @apply inline-block px-8 py-3 bg-white text-paypro-800 font-semibold text-lg rounded-lg hover:bg-paypro-50 border-2 border-paypro-200 hover:border-paypro-300 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl;
   }

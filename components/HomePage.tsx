@@ -169,7 +169,7 @@ export default async function HomePage({ locale }: HomePageProps) {
               : 'Get access to in-depth analysis, real-time data and expert insights on payments and economic trends.'
             }
           </p>
-          <Link href={getLocalizedHref('/dashboards/makro')} className="btn-primary">
+          <Link href={getLocalizedHref('/dashboards/makro')} className="btn-primary-light">
             {locale === 'sv' ? 'Utforska våra dashboards' : 'Explore our dashboards'}
           </Link>
         </div>
