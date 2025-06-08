@@ -13,6 +13,9 @@ export default function LanguageSwitcher({ currentLocale }: LanguageSwitcherProp
   const pathname = usePathname()
   
   const getLocalizedPath = (locale: Locale) => {
+    // Handle null pathname case
+    if (!pathname) return locale === 'sv' ? '/' : '/en'
+    
     // Remove current locale from path
     const pathWithoutLocale = pathname.replace(/^\/(sv|en)/, '') || '/'
     
