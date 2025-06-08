@@ -8,6 +8,32 @@ export interface Translations {
   'nav.macro': string
   'nav.navigation': string
   
+  // Homepage Hero
+  'hero.subtitle': string
+  'hero.description': string
+  'hero.cta_dashboard': string
+  'hero.cta_blog': string
+  
+  // Features
+  'features.live_data.title': string
+  'features.live_data.description': string
+  'features.analysis.title': string
+  'features.analysis.description': string
+  'features.tools.title': string
+  'features.tools.description': string
+  
+  // Statistics
+  'stats.title': string
+  'stats.indicators': string
+  'stats.frequency': string
+  'stats.languages': string
+  'stats.availability': string
+  
+  // CTA Section
+  'cta.title': string
+  'cta.description': string
+  'cta.button': string
+  
   // Dashboard - Swedish Macro
   'macro.title': string
   'macro.description': string
@@ -61,6 +87,32 @@ const translations: Record<Locale, Translations> = {
     'nav.macro': 'Makroekonomi',
     'nav.navigation': 'Navigation',
     
+    // Homepage Hero
+    'hero.subtitle': 'Sveriges ekonomiska nav',
+    'hero.description': 'Live ekonomisk data, djupgående analyser och professionell rådgivning för investerare och beslutsfattare.',
+    'hero.cta_dashboard': '📊 Se Makro Dashboard',
+    'hero.cta_blog': '📰 Läs Analyser',
+    
+    // Features
+    'features.live_data.title': 'Live Makrodata',
+    'features.live_data.description': 'Realtidsdata från SCB och Riksbank. BNP, inflation, arbetslöshet och valutakurser uppdateras kontinuerligt.',
+    'features.analysis.title': 'Djupgående Analyser',
+    'features.analysis.description': 'Professionella marknadsanalyser och investeringsinsikter från vårt expertteam och AI-assistenter.',
+    'features.tools.title': 'Precisionsverktyg',
+    'features.tools.description': 'Avancerade dashboard och visualiseringar för att förstå komplexa ekonomiska samband.',
+    
+    // Statistics
+    'stats.title': 'PayPro i siffror',
+    'stats.indicators': 'Ekonomiska Indikatorer',
+    'stats.frequency': 'Uppdateringsfrekvens',
+    'stats.languages': 'Språk Stödda',
+    'stats.availability': 'Tillgänglighet',
+    
+    // CTA Section
+    'cta.title': 'Börja utforska Sveriges ekonomi idag',
+    'cta.description': 'Få tillgång till professionell ekonomisk analys och live-data.',
+    'cta.button': 'Kom igång →',
+    
     // Dashboard
     'macro.title': '🇸🇪 Sveriges Makroekonomi Dashboard',
     'macro.description': 'Kompletta ekonomiska nyckeltal och trender för den svenska ekonomin',
@@ -112,6 +164,32 @@ const translations: Record<Locale, Translations> = {
     'nav.blog': 'Blog',
     'nav.macro': 'Macroeconomics',
     'nav.navigation': 'Navigation',
+    
+    // Homepage Hero
+    'hero.subtitle': 'Sweden\'s Economic Hub',
+    'hero.description': 'Live economic data, in-depth analysis and professional advisory for investors and decision makers.',
+    'hero.cta_dashboard': '📊 View Macro Dashboard',
+    'hero.cta_blog': '📰 Read Analysis',
+    
+    // Features
+    'features.live_data.title': 'Live Macro Data',
+    'features.live_data.description': 'Real-time data from SCB and Riksbank. GDP, inflation, unemployment and exchange rates updated continuously.',
+    'features.analysis.title': 'In-Depth Analysis',
+    'features.analysis.description': 'Professional market analysis and investment insights from our expert team and AI assistants.',
+    'features.tools.title': 'Precision Tools',
+    'features.tools.description': 'Advanced dashboards and visualizations to understand complex economic relationships.',
+    
+    // Statistics
+    'stats.title': 'PayPro in Numbers',
+    'stats.indicators': 'Economic Indicators',
+    'stats.frequency': 'Update Frequency',
+    'stats.languages': 'Languages Supported',
+    'stats.availability': 'Availability',
+    
+    // CTA Section
+    'cta.title': 'Start exploring Sweden\'s economy today',
+    'cta.description': 'Get access to professional economic analysis and live data.',
+    'cta.button': 'Get Started →',
     
     // Dashboard
     'macro.title': '🇸🇪 Swedish Macroeconomic Dashboard',
