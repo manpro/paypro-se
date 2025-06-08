@@ -4,7 +4,6 @@ import Header from '@/components/layout/Header'
 import BlogCard from '@/components/blog/BlogCard'
 import { Locale, i18n } from '@/i18n.config'
 import { getBlogPosts } from '@/lib/content'
-import { getTranslation } from '@/lib/translations'
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ locale }))
@@ -12,16 +11,20 @@ export async function generateStaticParams() {
 
 export default async function BlogIndex({ params }: { params: { locale: Locale } }) {
   const { locale } = params
-  const t = (key: string) => getTranslation(key as keyof import('@/lib/translations').Translations, locale)
   
   // Get blog posts for current locale
   const blogPosts = await getBlogPosts(locale)
 
+  const title = locale === 'sv' ? 'Blogg' : 'Blog'
+  const description = locale === 'sv' 
+    ? 'Senaste analyser och insikter om ekonomi och betalningar'
+    : 'Latest analysis and insights on economics and payments'
+
   return (
     <>
       <Head>
-        <title>{t('blog.title')} - PayPro.se</title>
-        <meta name="description" content={t('blog.description')} />
+        <title>{title} - PayPro.se</title>
+        <meta name="description" content={description} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
