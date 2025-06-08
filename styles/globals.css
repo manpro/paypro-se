@@ -22,7 +22,7 @@
   }
   
   .btn-primary-light {
-    @apply inline-block px-8 py-3 bg-white text-paypro-800 font-semibold text-lg rounded-lg hover:bg-gray-50 transform hover:scale-105 transition-all duration-200 shadow-xl hover:shadow-2xl border-2 border-white;
+    @apply inline-block px-8 py-3 bg-white text-gray-900 font-semibold text-lg rounded-lg hover:bg-gray-100 transform hover:scale-105 transition-all duration-200 shadow-2xl hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)] border-2 border-gray-300 hover:border-gray-400;
   }
   
   .btn-secondary {
