@@ -8,21 +8,17 @@ import { getTranslation } from '@/lib/translations'
 import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 
 interface HeaderProps {
-  locale?: Locale
+  locale: Locale
 }
 
 const Header = ({ locale }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const pathname = usePathname()
   
-  // Detect current locale from pathname if not provided
-  const currentLocale = locale || (pathname?.startsWith('/en') ? 'en' : 'sv')
-  
-  const t = (key: keyof import('@/lib/translations').Translations) => getTranslation(key, currentLocale)
+  const t = (key: keyof import('@/lib/translations').Translations) => getTranslation(key, locale)
   
   // Create locale-aware URLs
   const getLocalizedHref = (path: string) => {
-    if (currentLocale === 'en') {
+    if (locale === 'en') {
       return path === '/' ? '/en' : `/en${path}`
     }
     return path
@@ -61,7 +57,7 @@ const Header = ({ locale }: HeaderProps) => {
             </nav>
             
             {/* Language Switcher */}
-            <LanguageSwitcher currentLocale={currentLocale} />
+            <LanguageSwitcher currentLocale={locale} />
           </div>
 
           {/* Mobile menu button */}
@@ -96,7 +92,7 @@ const Header = ({ locale }: HeaderProps) => {
               
               {/* Mobile Language Switcher */}
               <div className="px-3 py-2 border-t border-gray-200 mt-4 pt-4">
-                <LanguageSwitcher currentLocale={currentLocale} />
+                <LanguageSwitcher currentLocale={locale} />
               </div>
             </div>
           </div>
