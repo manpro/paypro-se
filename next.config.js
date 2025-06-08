@@ -12,15 +12,6 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
-  // App Router i18n stöd
-  async rewrites() {
-    return [
-      {
-        source: '/en/:path*',
-        destination: '/en/:path*',
-      },
-    ]
-  },
 }
 
 module.exports = withMDX(nextConfig) 
