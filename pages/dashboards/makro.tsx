@@ -11,8 +11,11 @@ import dayjs from 'dayjs'
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
-// Mock historical data for charts
+// Mock historical data for charts - 2 års period
 const historicalGDP = [
+  { period: 'Q1 2023', value: 0.8 },
+  { period: 'Q2 2023', value: 0.4 },
+  { period: 'Q3 2023', value: -0.1 },
   { period: 'Q4 2023', value: 0.3 },
   { period: 'Q1 2024', value: 0.6 },
   { period: 'Q2 2024', value: 0.2 },
@@ -22,20 +25,27 @@ const historicalGDP = [
 ]
 
 const historicalInflation = [
-  { month: 'Jan', value: 3.1 },
-  { month: 'Feb', value: 2.9 },
-  { month: 'Mar', value: 2.7 },
-  { month: 'Apr', value: 2.5 },
-  { month: 'Maj', value: 2.3 },
-  { month: 'Jun', value: 2.2 },
+  { period: 'Q1 2023', value: 8.2 },
+  { period: 'Q2 2023', value: 7.1 },
+  { period: 'Q3 2023', value: 5.4 },
+  { period: 'Q4 2023', value: 4.2 },
+  { period: 'Q1 2024', value: 3.8 },
+  { period: 'Q2 2024', value: 3.1 },
+  { period: 'Q3 2024', value: 2.7 },
+  { period: 'Q4 2024', value: 2.4 },
+  { period: 'Q1 2025', value: 2.2 },
 ]
 
 const historicalRates = [
-  { month: 'Jan', repo: 2.75, sek_eur: 11.2, usd_sek: 11.5, usd_eur: 0.95 },
-  { month: 'Feb', repo: 2.75, sek_eur: 11.1, usd_sek: 11.6, usd_eur: 0.94 },
-  { month: 'Mar', repo: 2.5, sek_eur: 11.0, usd_sek: 11.7, usd_eur: 0.93 },
-  { month: 'Apr', repo: 2.5, sek_eur: 10.9, usd_sek: 11.8, usd_eur: 0.92 },
-  { month: 'Maj', repo: 2.25, sek_eur: 10.943, usd_sek: 11.75, usd_eur: 0.93 },
+  { period: 'Q1 2023', repo: 1.25, sek_eur: 11.4, usd_sek: 10.8, usd_eur: 0.98 },
+  { period: 'Q2 2023', repo: 1.75, sek_eur: 11.6, usd_sek: 11.1, usd_eur: 0.96 },
+  { period: 'Q3 2023', repo: 2.25, sek_eur: 11.5, usd_sek: 11.3, usd_eur: 0.95 },
+  { period: 'Q4 2023', repo: 2.75, sek_eur: 11.2, usd_sek: 11.5, usd_eur: 0.95 },
+  { period: 'Q1 2024', repo: 2.75, sek_eur: 11.1, usd_sek: 11.6, usd_eur: 0.94 },
+  { period: 'Q2 2024', repo: 2.5, sek_eur: 11.0, usd_sek: 11.7, usd_eur: 0.93 },
+  { period: 'Q3 2024', repo: 2.5, sek_eur: 10.9, usd_sek: 11.8, usd_eur: 0.92 },
+  { period: 'Q4 2024', repo: 2.25, sek_eur: 10.943, usd_sek: 11.75, usd_eur: 0.93 },
+  { period: 'Q1 2025', repo: 2.25, sek_eur: 10.943, usd_sek: 11.75, usd_eur: 0.93 },
 ]
 
 const SverigeMakroDashboard = () => {
@@ -180,7 +190,7 @@ const SverigeMakroDashboard = () => {
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={historicalInflation}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="period" />
                   <YAxis />
                   <Tooltip formatter={(value) => [`${value}%`, 'Inflation']} />
                   <Line type="monotone" dataKey="value" stroke="#dc2626" strokeWidth={3} />
@@ -196,7 +206,7 @@ const SverigeMakroDashboard = () => {
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={historicalRates}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="period" />
                   <YAxis />
                   <Tooltip 
                     formatter={(value, name) => {
@@ -218,7 +228,7 @@ const SverigeMakroDashboard = () => {
               <ResponsiveContainer width="100%" height={250}>
                 <AreaChart data={historicalRates}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
+                  <XAxis dataKey="period" />
                   <YAxis />
                   <Tooltip formatter={(value) => [`${value}%`, 'Reporänta']} />
                   <Area type="monotone" dataKey="repo" stroke="#059669" fill="#059669" fillOpacity={0.3} />
