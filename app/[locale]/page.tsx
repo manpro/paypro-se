@@ -26,7 +26,7 @@ export default function HomePage({ params }: { params: { locale: Locale } }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
+      <Header locale={locale} />
 
       <main className="py-16 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
         <div className="container-custom">

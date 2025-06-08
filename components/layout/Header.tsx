@@ -2,20 +2,47 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Locale } from '@/i18n.config'
+import { getTranslation } from '@/lib/translations'
 
-const Header = () => {
+interface HeaderProps {
+  locale?: Locale
+}
+
+const Header = ({ locale }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const pathname = usePathname()
+  
+  // Detect current locale from pathname if not provided
+  const currentLocale = locale || (pathname?.startsWith('/en') ? 'en' : 'sv')
+  
+  const t = (key: keyof import('@/lib/translations').Translations) => getTranslation(key, currentLocale)
+  
+  // Create locale-aware URLs
+  const getLocalizedHref = (path: string) => {
+    if (currentLocale === 'en') {
+      return path === '/' ? '/en' : `/en${path}`
+    }
+    return path
+  }
 
   const navigation = [
-    { name: 'Hem', href: '/' },
-    { name: 'Blogg', href: '/blog' },
+    { name: t('nav.home'), href: getLocalizedHref('/') },
+    { name: t('nav.blog'), href: getLocalizedHref('/blog') },
     { 
-      name: 'Dashboards', 
+      name: t('nav.dashboards'), 
       href: '#',
       children: [
-        { name: 'Makroekonomi', href: '/dashboards/makro' },
-        { name: 'Svenska Betalningar', href: '/dashboards/swish' },
-        { name: 'Globala Trender', href: '/dashboards/global' },
+        { name: t('nav.macro'), href: getLocalizedHref('/dashboards/makro') },
+        { 
+          name: currentLocale === 'sv' ? 'Svenska Betalningar' : 'Swedish Payments', 
+          href: getLocalizedHref('/dashboards/swish') 
+        },
+        { 
+          name: currentLocale === 'sv' ? 'Globala Trender' : 'Global Trends', 
+          href: getLocalizedHref('/dashboards/global') 
+        },
       ]
     },
   ]
@@ -25,7 +52,7 @@ const Header = () => {
       <div className="container-custom">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
+          <Link href={getLocalizedHref('/')} className="flex items-center space-x-2">
             <div className="h-8 w-8 bg-paypro-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">P</span>
             </div>

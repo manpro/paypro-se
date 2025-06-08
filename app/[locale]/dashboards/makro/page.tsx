@@ -23,7 +23,7 @@ export default function SverigeMakroDashboard({ params }: { params: { locale: Lo
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Header />
+      <Header locale={locale} />
       <MacroDashboardClient locale={locale} />
       <Footer />
     </>

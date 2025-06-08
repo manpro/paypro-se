@@ -57,7 +57,7 @@ const translations: Record<Locale, Translations> = {
     'nav.home': 'Hem',
     'nav.dashboards': 'Dashboards',
     'nav.blog': 'Blogg',
-    'nav.macro': 'Makro',
+    'nav.macro': 'Makroekonomi',
     
     // Dashboard
     'macro.title': '🇸🇪 Sveriges Makroekonomi Dashboard',
@@ -108,7 +108,7 @@ const translations: Record<Locale, Translations> = {
     'nav.home': 'Home',
     'nav.dashboards': 'Dashboards',
     'nav.blog': 'Blog',
-    'nav.macro': 'Macro',
+    'nav.macro': 'Macroeconomics',
     
     // Dashboard
     'macro.title': '🇸🇪 Swedish Macroeconomic Dashboard',
