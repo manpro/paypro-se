@@ -54,7 +54,7 @@ export default async function HomePage({ locale }: HomePageProps) {
               <Link href={getLocalizedHref('/blog')} className="btn-primary text-center">
                 {locale === 'sv' ? 'Läs senaste analyserna' : 'Read latest insights'}
               </Link>
-              <Link href={getLocalizedHref('/dashboards/makro')} className="btn-secondary text-center">
+              <Link href={getLocalizedHref('/dashboards/makro')} className="btn-primary text-center">
                 {locale === 'sv' ? 'Utforska data' : 'Explore data'}
               </Link>
             </div>
@@ -169,7 +169,7 @@ export default async function HomePage({ locale }: HomePageProps) {
               : 'Get access to in-depth analysis, real-time data and expert insights on payments and economic trends.'
             }
           </p>
-          <Link href={getLocalizedHref('/dashboards/makro')} className="btn-secondary">
+          <Link href={getLocalizedHref('/dashboards/makro')} className="btn-primary">
             {locale === 'sv' ? 'Utforska våra dashboards' : 'Explore our dashboards'}
           </Link>
         </div>
