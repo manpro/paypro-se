@@ -11,6 +11,7 @@ export interface BlogPost {
   date: string
   author: string
   tags: string[]
+  readingTime: string
   locale: Locale
 }
 
@@ -43,14 +44,21 @@ export async function getBlogPosts(locale: Locale): Promise<BlogPost[]> {
       let content: string
 
       if (fileName.endsWith('.html')) {
-        // Simple HTML parsing for existing files
+        // Extract metadata from HTML meta tags
         const titleMatch = fileContents.match(/<title>(.*?)<\/title>/i)
+        const descriptionMatch = fileContents.match(/<meta name="description" content="(.*?)"/i)
+        const authorMatch = fileContents.match(/<meta name="author" content="(.*?)"/i)
+        const publishedMatch = fileContents.match(/<meta name="published" content="(.*?)"/i)
+        const readingTimeMatch = fileContents.match(/<meta name="reading-time" content="(.*?)"/i)
+        const keywordsMatch = fileContents.match(/<meta name="keywords" content="(.*?)"/i)
+        
         frontMatter = {
           title: titleMatch ? titleMatch[1] : slug,
-          date: new Date().toISOString(),
-          author: 'PayPro Team',
-          tags: [],
-          excerpt: ''
+          date: publishedMatch ? publishedMatch[1] : new Date().toISOString(),
+          author: authorMatch ? authorMatch[1] : 'PayPro Team',
+          tags: keywordsMatch ? keywordsMatch[1].split(',').map(tag => tag.trim()) : [],
+          excerpt: descriptionMatch ? descriptionMatch[1] : '',
+          readingTime: readingTimeMatch ? readingTimeMatch[1] : '5 min'
         }
         content = fileContents
       } else {
@@ -67,6 +75,7 @@ export async function getBlogPosts(locale: Locale): Promise<BlogPost[]> {
         date: frontMatter.date || new Date().toISOString(),
         author: frontMatter.author || 'PayPro Team',
         tags: frontMatter.tags || [],
+        readingTime: frontMatter.readingTime || '5 min',
         locale
       })
     }

@@ -20,7 +20,7 @@ export default function HomePage({ locale }: HomePageProps) {
       try {
         const [posts, metrics] = await Promise.all([
           fetchBlogPosts(),
-          fetchKeyMetrics()
+          fetchKeyMetrics(locale)
         ])
         setBlogPosts(posts.slice(0, 3)) // Show only latest 3 posts
         setKeyMetrics(metrics)

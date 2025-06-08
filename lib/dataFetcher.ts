@@ -154,7 +154,7 @@ export async function fetchEconomicData(type: 'gdp' | 'inflation' | 'unemploymen
 }
 
 // Riktiga nyckeltal baserat på senaste svenska data
-export async function fetchKeyMetrics(): Promise<MetricData[]> {
+export async function fetchKeyMetrics(locale: 'sv' | 'en' = 'sv'): Promise<MetricData[]> {
   await new Promise(resolve => setTimeout(resolve, 100))
   
   const liveData = await fetchLiveEconomicData()
@@ -169,40 +169,40 @@ export async function fetchKeyMetrics(): Promise<MetricData[]> {
 
   return [
     {
-      title: 'BNP Tillväxt',
+      title: locale === 'sv' ? 'BNP Tillväxt' : 'GDP Growth',
       value: gdpChange.toFixed(1),
       unit: '%',
       change: gdpChange > 0 ? `+${gdpChange.toFixed(1)}` : gdpChange.toFixed(1),
       changeType: gdpChange > 0 ? 'positive' : 'negative',
-      description: 'Kvartal över kvartal'
+      description: locale === 'sv' ? 'Kvartal över kvartal' : 'Quarter over quarter'
     },
     {
-      title: 'Inflation (KPI)',
+      title: locale === 'sv' ? 'Inflation (KPI)' : 'Inflation (CPI)',
       value: latestInflation?.value?.toFixed(1) || '2.2',
       unit: '%',
       change: inflationData.length > 1 ? 
         (latestInflation?.value - inflationData[inflationData.length - 2]?.value)?.toFixed(1) : '0.0',
       changeType: inflationData.length > 1 && 
         (latestInflation?.value - inflationData[inflationData.length - 2]?.value) < 0 ? 'positive' : 'negative',
-      description: 'Årlig förändring'
+      description: locale === 'sv' ? 'Årlig förändring' : 'Annual change'
     },
     {
-      title: 'Arbetslöshet',
+      title: locale === 'sv' ? 'Arbetslöshet' : 'Unemployment',
       value: latestUnemployment?.value?.toFixed(1) || '7.0',
       unit: '%',
       change: unemploymentData.length > 1 ? 
         (latestUnemployment?.value - unemploymentData[unemploymentData.length - 2]?.value)?.toFixed(1) : '0.0',
       changeType: unemploymentData.length > 1 && 
         (latestUnemployment?.value - unemploymentData[unemploymentData.length - 2]?.value) < 0 ? 'positive' : 'negative',
-      description: 'Senaste månaden'
+      description: locale === 'sv' ? 'Senaste månaden' : 'Latest month'
     },
     {
-      title: 'Reporänta',
+      title: locale === 'sv' ? 'Reporänta' : 'Repo Rate',
       value: liveData.repoRate.toFixed(2),
       unit: '%',
       change: '0.00',
       changeType: 'neutral',
-      description: 'Senaste beslut'
+      description: locale === 'sv' ? 'Senaste beslut' : 'Latest decision'
     }
   ]
 }

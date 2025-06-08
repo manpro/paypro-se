@@ -9,12 +9,8 @@ interface BlogCardProps {
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, locale }) => {
-  // Calculate reading time (rough estimate: 200 words per minute)
-  const wordCount = post.content.split(' ').length
-  const readingTime = Math.ceil(wordCount / 200)
-  const readingTimeText = locale === 'sv' 
-    ? `${readingTime} min läsning` 
-    : `${readingTime} min read`
+  // Use reading time from post metadata
+  const readingTimeText = post.readingTime || (locale === 'sv' ? '5 min läsning' : '5 min read')
 
   // Create locale-aware URL
   const getLocalizedHref = (slug: string) => {
