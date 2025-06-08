@@ -1,7 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
 import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
 import { Locale, i18n } from '@/i18n.config'
 import { getTranslation } from '@/lib/translations'
 
@@ -158,8 +157,6 @@ export default function HomePage({ params }: { params: { locale: Locale } }) {
           </div>
         </div>
       </main>
-
-      <Footer />
     </>
   )
 } 

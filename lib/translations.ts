@@ -6,6 +6,7 @@ export interface Translations {
   'nav.dashboards': string
   'nav.blog': string
   'nav.macro': string
+  'nav.navigation': string
   
   // Dashboard - Swedish Macro
   'macro.title': string
@@ -58,6 +59,7 @@ const translations: Record<Locale, Translations> = {
     'nav.dashboards': 'Dashboards',
     'nav.blog': 'Blogg',
     'nav.macro': 'Makroekonomi',
+    'nav.navigation': 'Navigation',
     
     // Dashboard
     'macro.title': '🇸🇪 Sveriges Makroekonomi Dashboard',
@@ -109,6 +111,7 @@ const translations: Record<Locale, Translations> = {
     'nav.dashboards': 'Dashboards',
     'nav.blog': 'Blog',
     'nav.macro': 'Macroeconomics',
+    'nav.navigation': 'Navigation',
     
     // Dashboard
     'macro.title': '🇸🇪 Swedish Macroeconomic Dashboard',

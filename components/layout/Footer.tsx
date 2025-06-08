@@ -1,8 +1,30 @@
 import React from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Locale } from '@/i18n.config'
+import { getTranslation } from '@/lib/translations'
+import LanguageSwitcher from '@/components/layout/LanguageSwitcher'
 
-const Footer = () => {
+interface FooterProps {
+  locale?: Locale
+}
+
+const Footer = ({ locale }: FooterProps) => {
+  const pathname = usePathname()
   const currentYear = new Date().getFullYear()
+  
+  // Detect current locale from pathname if not provided
+  const currentLocale = locale || (pathname?.startsWith('/en') ? 'en' : 'sv')
+  
+  const t = (key: keyof import('@/lib/translations').Translations) => getTranslation(key, currentLocale)
+  
+  // Create locale-aware URLs
+  const getLocalizedHref = (path: string) => {
+    if (currentLocale === 'en') {
+      return path === '/' ? '/en' : `/en${path}`
+    }
+    return path
+  }
 
   return (
     <footer className="bg-gray-900 text-white">
@@ -17,7 +39,10 @@ const Footer = () => {
               <span className="text-xl font-bold">PayPro.se</span>
             </div>
             <p className="text-gray-300 mb-4 max-w-md">
-              Ledande analys och insikter om betalningar, ekonomi och finansiella trender i Sverige och världen.
+              {currentLocale === 'sv' 
+                ? 'Ledande analys och insikter om betalningar, ekonomi och finansiella trender i Sverige och världen.'
+                : 'Leading analysis and insights on payments, economics and financial trends in Sweden and globally.'
+              }
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -37,65 +62,77 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Navigation</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+              {t('nav.navigation')}
+            </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-gray-300 hover:text-white transition-colors">
-                  Hem
+                <Link href={getLocalizedHref('/')} className="text-gray-300 hover:text-white transition-colors">
+                  {t('nav.home')}
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-gray-300 hover:text-white transition-colors">
-                  Blogg
+                <Link href={getLocalizedHref('/blog')} className="text-gray-300 hover:text-white transition-colors">
+                  {t('nav.blog')}
                 </Link>
               </li>
               <li>
-                <Link href="/dashboards/makro" className="text-gray-300 hover:text-white transition-colors">
-                  Makroekonomi
+                <Link href={getLocalizedHref('/dashboards/makro')} className="text-gray-300 hover:text-white transition-colors">
+                  {t('nav.macro')}
                 </Link>
               </li>
               <li>
-                <Link href="/dashboards/swish" className="text-gray-300 hover:text-white transition-colors">
-                  Svenska Betalningar
+                <Link href={getLocalizedHref('/dashboards/swish')} className="text-gray-300 hover:text-white transition-colors">
+                  {currentLocale === 'sv' ? 'Svenska Betalningar' : 'Swedish Payments'}
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Resources */}
+          {/* Resources & Language Switcher */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">Resurser</h3>
-            <ul className="space-y-3">
+            <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
+              {currentLocale === 'sv' ? 'Resurser' : 'Resources'}
+            </h3>
+            <ul className="space-y-3 mb-6">
               <li>
                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                  Om oss
+                  {currentLocale === 'sv' ? 'Om oss' : 'About us'}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                  Kontakt
+                  {currentLocale === 'sv' ? 'Kontakt' : 'Contact'}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                  Integritetspolicy
+                  {currentLocale === 'sv' ? 'Integritetspolicy' : 'Privacy Policy'}
                 </a>
               </li>
               <li>
                 <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                  Användarvillkor
+                  {currentLocale === 'sv' ? 'Användarvillkor' : 'Terms of Service'}
                 </a>
               </li>
             </ul>
+            
+            {/* Language Switcher in Footer */}
+            <div>
+              <h4 className="text-sm font-semibold uppercase tracking-wider mb-3 text-gray-400">
+                {currentLocale === 'sv' ? 'Språk' : 'Language'}
+              </h4>
+              <LanguageSwitcher currentLocale={currentLocale} />
+            </div>
           </div>
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © {currentYear} PayPro.se. Alla rättigheter förbehållna.
+            © {currentYear} PayPro.se. {currentLocale === 'sv' ? 'Alla rättigheter förbehållna.' : 'All rights reserved.'}
           </p>
           <p className="text-gray-400 text-sm mt-4 md:mt-0">
-            Utvecklad med ❤️ i Sverige
+            {currentLocale === 'sv' ? 'Utvecklad med ❤️ i Sverige' : 'Made with ❤️ in Sweden'}
           </p>
         </div>
       </div>

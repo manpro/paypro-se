@@ -34,18 +34,19 @@ export default function LanguageSwitcher({ currentLocale }: LanguageSwitcherProp
   }
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
       {i18n.locales.map((locale) => (
         <Link
           key={locale}
           href={getLocalizedPath(locale)}
-          className={`px-3 py-1 text-sm rounded transition-colors ${
+          className={`px-3 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
             currentLocale === locale
-              ? 'bg-paypro-600 text-white'
-              : 'text-gray-600 hover:text-paypro-600 hover:bg-gray-100'
+              ? 'bg-paypro-600 text-white shadow-sm'
+              : 'text-gray-700 hover:text-paypro-600 hover:bg-white hover:shadow-sm'
           }`}
+          title={locale === 'sv' ? 'Byt till svenska' : 'Switch to English'}
         >
-          {locale === 'sv' ? '🇸🇪 SV' : '🇬🇧 EN'}
+          {locale === 'sv' ? '🇸🇪 Svenska' : '🇬🇧 English'}
         </Link>
       ))}
     </div>
