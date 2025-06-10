@@ -29,18 +29,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (error) {
     console.error('Error fetching macro data for SSR:', error)
     
-    // Fallback data om API:er inte fungerar - KORRIGERAT 2025-06-10
+    // Fallback data om API:er inte fungerar
     const fallbackData: MacroData = {
       updated: dayjs().toISOString(),
-      gdpQoQ: -0.20,      // FIXAT: BNP minskade -0.2% Q1 2025
-      inflationYoY: 2.30, // FIXAT: KPI 2.3% maj 2025  
-      unemployment: 8.70, // FIXAT: AKU säsongrensad 8.7%
-      hpiYoY: -6.20,      // Oförändrad
-      repoRate: 2.25,     // Korrekt ✅
-      sekEur: 10.946,     // Korrekt ✅ 
-      usdSek: 9.60,       // FIXAT: USD/SEK ~9.60
-      usdEur: 0.88,       // FIXAT: USD/EUR ~0.88
-      debtRatio: 186.50   // Oförändrad
+      gdpQoQ: -0.20,      // BNP Q1 2025 (SCB)
+      inflationYoY: 2.30, // KPI maj 2025 (SCB)
+      unemployment: 8.70, // AKU säsongrensad (SCB)
+      ecbRate: 2.00,      // ECB deposit facility rate
+      repoRate: 2.25,     // Riksbank
+      sekEur: 10.946,     // Riksbank
+      usdSek: 9.60,       // Riksbank
+      usdEur: 0.88,       // Riksbank
     }
     
     return {
@@ -62,8 +61,8 @@ export default function MacroPage({ macroData, locale }: MacroPageProps) {
     inflation: locale === 'sv' ? 'Inflation (KPI)' : 'Inflation (CPI)',
     unemployment: locale === 'sv' ? 'Arbetslöshet' : 'Unemployment',
     repoRate: locale === 'sv' ? 'Reporänta' : 'Repo Rate',
+    ecbRate: locale === 'sv' ? 'ECB-ränta' : 'ECB Rate',
     currency: locale === 'sv' ? 'Valutakurser' : 'Exchange Rates',
-    debtRatio: locale === 'sv' ? 'Skuldsättningsgrad' : 'Debt Ratio',
     lastUpdated: locale === 'sv' ? 'Senast uppdaterad' : 'Last updated',
     source: locale === 'sv' ? 'Källa: Riksbank & SCB' : 'Source: Riksbank & SCB'
   }
@@ -231,29 +230,17 @@ export default function MacroPage({ macroData, locale }: MacroPageProps) {
             </div>
           </div>
 
-          {/* Additional Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {/* ECB Rate Section */}
+          <div className="grid grid-cols-1 gap-6 mb-8">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                {t.debtRatio}
+                {t.ecbRate}
               </h2>
-              <div className="text-3xl font-bold text-red-600 mb-2">
-                {formatValue(macroData.debtRatio, '%')}
+              <div className="text-3xl font-bold text-purple-600 mb-2">
+                {formatValue(macroData.ecbRate, '%')}
               </div>
               <p className="text-sm text-gray-600">
-                Hushållens skulder i förhållande till disponibel inkomst
-              </p>
-            </div>
-
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
-                Bostadspriser
-              </h2>
-              <div className="text-3xl font-bold text-orange-600 mb-2">
-                {formatValue(macroData.hpiYoY, '%')}
-              </div>
-              <p className="text-sm text-gray-600">
-                Årlig förändring, bostadsprisindex
+                ECB deposit facility rate, senaste beslut
               </p>
             </div>
           </div>
@@ -276,8 +263,9 @@ export default function MacroPage({ macroData, locale }: MacroPageProps) {
             <ul className="space-y-2 text-sm text-gray-600">
               <li>• <strong>Riksbank API:</strong> Reporänta och valutakurser</li>
               <li>• <strong>SCB (Statistiska centralbyrån):</strong> BNP, inflation, arbetslöshet</li>
+              <li>• <strong>ECB Data Portal:</strong> Europeiska centralbankens räntor</li>
               <li>• <strong>Live API endpoint:</strong> <a href="/api/macro" className="text-blue-600 hover:underline">/api/macro</a></li>
-              <li>• <strong>Uppdateringsfrekvens:</strong> Realtid för valutakurser, månadsvis för övrig data</li>
+              <li>• <strong>Uppdateringsfrekvens:</strong> Realtid via API</li>
             </ul>
           </div>
         </div>

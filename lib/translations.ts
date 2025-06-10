@@ -60,6 +60,8 @@ export interface Translations {
   'metric.usd_eur.desc': string
   'metric.debt_ratio': string
   'metric.debt_ratio.desc': string
+  'metric.ecb_rate': string
+  'metric.ecb_rate.desc': string
   
   // Charts
   'chart.gdp.title': string
@@ -139,6 +141,8 @@ const translations: Record<Locale, Translations> = {
     'metric.usd_eur.desc': 'US-dollar per euro',
     'metric.debt_ratio': 'Skuldsättning',
     'metric.debt_ratio.desc': 'Hushållsskulder/inkomst',
+    'metric.ecb_rate': 'ECB-ränta',
+    'metric.ecb_rate.desc': 'Europeiska centralbankens inlåningsränta',
     
     // Charts
     'chart.gdp.title': 'BNP-tillväxt - Senaste kvartalen',
@@ -217,6 +221,8 @@ const translations: Record<Locale, Translations> = {
     'metric.usd_eur.desc': 'US dollars per euro',
     'metric.debt_ratio': 'Debt Ratio',
     'metric.debt_ratio.desc': 'Household debt/income',
+    'metric.ecb_rate': 'ECB Rate',
+    'metric.ecb_rate.desc': 'European Central Bank deposit facility rate',
     
     // Charts
     'chart.gdp.title': 'GDP Growth - Recent Quarters',

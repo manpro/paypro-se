@@ -308,13 +308,13 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
               <div className={`w-2 h-2 rounded-full ${hasError ? 'bg-red-500' : 'bg-green-500 animate-pulse'}`}></div>
             </div>
             <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              {t('metric.debt_ratio')}
+              {t('metric.ecb_rate')}
             </h3>
             <div className="text-3xl font-bold text-paypro-600 mb-2">
-              {formatValue(macroData?.debtRatio || null, '%')}
+              {formatValue(macroData?.ecbRate || null, '%')}
             </div>
             <p className="text-sm text-gray-600">
-              {t('metric.debt_ratio.desc')}
+              {t('metric.ecb_rate.desc')}
             </p>
           </div>
         </div>
