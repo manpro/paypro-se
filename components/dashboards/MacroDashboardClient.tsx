@@ -65,7 +65,7 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
   const hasError = error
 
   const formatValue = (value: number | null, suffix: string = '', decimals: number = 2) => {
-    if (value === null) return '⚠️'
+    if (value === null) return 'N/A'
     return `${value.toFixed(decimals)}${suffix}`
   }
 
