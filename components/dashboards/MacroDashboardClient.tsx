@@ -5,6 +5,7 @@ import useSWR from 'swr'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from 'recharts'
 import ChartCard from '@/components/dashboards/ChartCard'
 import MetricBox from '@/components/dashboards/MetricBox'
+import UpdateCalendar from '@/components/dashboards/UpdateCalendar'
 import { MacroData } from '@/lib/macroSources'
 import { getTranslation } from '@/lib/translations'
 import { Locale } from '@/i18n.config'
@@ -26,7 +27,7 @@ const historicalGDP = [
   { period: 'Q2 2024', value: 0.2 },
   { period: 'Q3 2024', value: 0.3 },
   { period: 'Q4 2024', value: 0.1 },
-  { period: 'Q1 2025', value: -0.2 },
+  { period: 'Q1 2025', value: 0.1 },
 ]
 
 const historicalInflation = [
@@ -38,7 +39,7 @@ const historicalInflation = [
   { period: 'Q2 2024', value: 3.1 },
   { period: 'Q3 2024', value: 2.7 },
   { period: 'Q4 2024', value: 2.4 },
-  { period: 'Q1 2025', value: 2.2 },
+  { period: 'Q1 2025', value: 1.8 },
 ]
 
 const historicalRates = [
@@ -50,7 +51,7 @@ const historicalRates = [
   { period: 'Q2 2024', repo: 2.5, sek_eur: 11.0, usd_sek: 11.7, usd_eur: 0.93 },
   { period: 'Q3 2024', repo: 2.5, sek_eur: 10.9, usd_sek: 11.8, usd_eur: 0.92 },
   { period: 'Q4 2024', repo: 2.25, sek_eur: 10.943, usd_sek: 11.75, usd_eur: 0.93 },
-  { period: 'Q1 2025', repo: 2.25, sek_eur: 10.943, usd_sek: 11.75, usd_eur: 0.93 },
+  { period: 'Q1 2025', repo: 2.25, sek_eur: 10.943, usd_sek: 11.89, usd_eur: 0.919 },
 ]
 
 export default function MacroDashboardClient({ locale }: MacroDashboardClientProps) {
@@ -73,8 +74,16 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
     return value >= 0 ? 'positive' : 'negative'
   }
 
-  const manualRefresh = () => {
-    mutate()
+  const manualRefresh = async () => {
+    try {
+      await mutate()
+      // Force a hard refresh after mutate completes
+      setTimeout(() => {
+        window.location.reload()
+      }, 500)
+    } catch (error) {
+      console.error('Manual refresh failed:', error)
+    }
   }
 
   const t = (key: keyof import('@/lib/translations').Translations) => getTranslation(key, locale)
@@ -310,33 +319,39 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
           </div>
         </div>
 
-        {/* Data Sources */}
-        <div className="card">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            {t('sources.title')}
-          </h3>
-          
-          {/* Live Data Information */}
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <div className="flex items-start">
-              <div className="flex-shrink-0">
-                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <h4 className="text-sm font-medium text-green-800">
-                  {t('sources.live.title')}
-                </h4>
-                <div className="mt-2 text-sm text-green-700">
-                  <p>
-                    {t('sources.live.desc')}
-                  </p>
-                  {macroData?.updated && (
-                    <p className="mt-1">
-                      <strong>{t('sources.updated')}</strong> {dayjs(macroData.updated).format('YYYY-MM-DD HH:mm:ss')}
+        {/* Update Calendar and Data Sources */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          {/* Update Calendar */}
+          <UpdateCalendar locale={locale} />
+
+          {/* Data Sources */}
+          <div className="card">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              {t('sources.title')}
+            </h3>
+            
+            {/* Live Data Information */}
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-start">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <h4 className="text-sm font-medium text-green-800">
+                    {t('sources.live.title')}
+                  </h4>
+                  <div className="mt-2 text-sm text-green-700">
+                    <p>
+                      {t('sources.live.desc')}
                     </p>
-                  )}
+                    {macroData?.updated && (
+                      <p className="mt-1">
+                        <strong>{t('sources.updated')}</strong> {dayjs(macroData.updated).format('YYYY-MM-DD HH:mm:ss')}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

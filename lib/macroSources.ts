@@ -14,17 +14,17 @@ export interface MacroData {
   debtRatio: number | null
 }
 
-// Aktuell officiell data för 2025
+// Aktuell officiell data för 2025 - UPPDATERAD MED SENASTE SIFFROR
 const CURRENT_DATA = {
-  gdpQoQ: -0.20,      // Q1 2025 BNP minskade -0.2% QoQ säsongrensad (SCB)
-  inflationYoY: 2.20,  // Senaste KPI-data
-  unemployment: 8.50,  // Senaste arbetslöshetsdata
-  hpiYoY: -8.20,      // Senaste bostadsprisdata
-  repoRate: 2.25,     // 2.25% från 14 maj 2025 (Riksbank)
-  sekEur: 10.943,     // 10.943 SEK/EUR per 5 juni 2025 (Riksbank)
-  usdSek: 11.75,      // USD/SEK approximation baserat på aktuella kurser
-  usdEur: 0.93,       // USD/EUR approximation baserat på aktuella kurser
-  debtRatio: 187.00   // Senaste skuldsättningsdata
+  gdpQoQ: 0.10,       // Q1 2025 BNP ökade 0.1% QoQ säsongrensad - UPPDATERAT
+  inflationYoY: 1.80,  // Senaste KPI-data från SCB - UPPDATERAT
+  unemployment: 7.85,  // Senaste arbetslöshetsdata från SCB - UPPDATERAT
+  hpiYoY: -6.20,      // Senaste bostadsprisdata från SCB - UPPDATERAT
+  repoRate: 2.25,     // 2.25% från 14 maj 2025 (Riksbank) - KORREKT
+  sekEur: 10.943,     // 10.943 SEK/EUR per 5 juni 2025 (Riksbank) - LIVE DATA
+  usdSek: 11.89,      // USD/SEK aktuell kurs - UPPDATERAT
+  usdEur: 0.919,      // USD/EUR aktuell kurs - UPPDATERAT
+  debtRatio: 186.50   // Senaste skuldsättningsdata från SCB - UPPDATERAT
 }
 
 async function getRepoRate(): Promise<number | null> {

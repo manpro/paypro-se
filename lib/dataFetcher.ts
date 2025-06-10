@@ -114,9 +114,9 @@ export async function fetchLiveEconomicData(): Promise<{
   // Simulera API-delay
   await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 200))
   
-  // Aktuella svenska ekonomiska nyckeltal (December 2024)
-  const baseRepoRate = 2.75 // Senaste från Riksbanken
-  const baseExchangeRate = 11.58 // SEK/EUR
+  // Aktuella svenska ekonomiska nyckeltal (uppdaterat för konsistens med dashboard)
+  const baseRepoRate = 2.25 // Senaste från Riksbanken - 2.25% från 14 maj 2025
+  const baseExchangeRate = 10.943 // SEK/EUR per 5 juni 2025
   const baseDebtRatio = 187 // Skuldsättningsgrad %
   
   return {
@@ -153,52 +153,42 @@ export async function fetchEconomicData(type: 'gdp' | 'inflation' | 'unemploymen
   }
 }
 
-// Riktiga nyckeltal baserat på senaste svenska data
+// Riktiga nyckeltal baserat på senaste svenska data - ANVÄNDER SAMMA KÄLLA SOM DASHBOARD
 export async function fetchKeyMetrics(locale: 'sv' | 'en' = 'sv'): Promise<MetricData[]> {
   await new Promise(resolve => setTimeout(resolve, 100))
   
-  const liveData = await fetchLiveEconomicData()
-  const gdpData = await fetchEconomicData('gdp')
-  const inflationData = await fetchEconomicData('inflation')
-  const unemploymentData = await fetchEconomicData('unemployment')
-
-  const latestGdp = gdpData[gdpData.length - 1]
-  const gdpChange = latestGdp?.change || 0
-  const latestInflation = inflationData[inflationData.length - 1]
-  const latestUnemployment = unemploymentData[unemploymentData.length - 1]
+  // Importera samma datakälla som dashboard använder för konsistens
+  const { getMacro } = await import('./macroSources')
+  const macroData = await getMacro()
 
   return [
     {
       title: locale === 'sv' ? 'BNP Tillväxt' : 'GDP Growth',
-      value: gdpChange.toFixed(1),
+      value: macroData.gdpQoQ?.toFixed(1) || '-0.2',
       unit: '%',
-      change: gdpChange > 0 ? `+${gdpChange.toFixed(1)}` : gdpChange.toFixed(1),
-      changeType: gdpChange > 0 ? 'positive' : 'negative',
+      change: macroData.gdpQoQ ? (macroData.gdpQoQ > 0 ? `+${macroData.gdpQoQ.toFixed(1)}` : macroData.gdpQoQ.toFixed(1)) : '-0.2',
+      changeType: macroData.gdpQoQ && macroData.gdpQoQ > 0 ? 'positive' : 'negative',
       description: locale === 'sv' ? 'Kvartal över kvartal' : 'Quarter over quarter'
     },
     {
       title: locale === 'sv' ? 'Inflation (KPI)' : 'Inflation (CPI)',
-      value: latestInflation?.value?.toFixed(1) || '2.2',
+      value: macroData.inflationYoY?.toFixed(1) || '2.2',
       unit: '%',
-      change: inflationData.length > 1 ? 
-        (latestInflation?.value - inflationData[inflationData.length - 2]?.value)?.toFixed(1) : '0.0',
-      changeType: inflationData.length > 1 && 
-        (latestInflation?.value - inflationData[inflationData.length - 2]?.value) < 0 ? 'positive' : 'negative',
+      change: '0.0', // Behöver historiska data för att beräkna förändring
+      changeType: 'neutral',
       description: locale === 'sv' ? 'Årlig förändring' : 'Annual change'
     },
     {
       title: locale === 'sv' ? 'Arbetslöshet' : 'Unemployment',
-      value: latestUnemployment?.value?.toFixed(1) || '7.0',
+      value: macroData.unemployment?.toFixed(1) || '8.5',
       unit: '%',
-      change: unemploymentData.length > 1 ? 
-        (latestUnemployment?.value - unemploymentData[unemploymentData.length - 2]?.value)?.toFixed(1) : '0.0',
-      changeType: unemploymentData.length > 1 && 
-        (latestUnemployment?.value - unemploymentData[unemploymentData.length - 2]?.value) < 0 ? 'positive' : 'negative',
+      change: '0.0', // Behöver historiska data för att beräkna förändring
+      changeType: 'neutral',
       description: locale === 'sv' ? 'Senaste månaden' : 'Latest month'
     },
     {
       title: locale === 'sv' ? 'Reporänta' : 'Repo Rate',
-      value: liveData.repoRate.toFixed(2),
+      value: macroData.repoRate?.toFixed(2) || '2.25',
       unit: '%',
       change: '0.00',
       changeType: 'neutral',
