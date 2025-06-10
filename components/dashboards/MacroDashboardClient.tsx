@@ -146,27 +146,27 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
             <>
               <MetricBox
                 title={t('metric.gdp')}
-                value={formatValue(macroData?.gdpQoQ || null, '%')}
-                change={macroData?.gdpQoQ ? `${macroData.gdpQoQ > 0 ? '+' : ''}${macroData.gdpQoQ.toFixed(2)}%` : undefined}
-                changeType={getChangeType(macroData?.gdpQoQ || null)}
+                value={formatValue(macroData?.gdpQoQ ?? null, '%')}
+                change={macroData?.gdpQoQ !== null && macroData?.gdpQoQ !== undefined ? `${macroData.gdpQoQ > 0 ? '+' : ''}${macroData.gdpQoQ.toFixed(2)}%` : undefined}
+                changeType={getChangeType(macroData?.gdpQoQ ?? null)}
                 description={t('metric.gdp.desc')}
               />
               <MetricBox
                 title={t('metric.inflation')}
-                value={formatValue(macroData?.inflationYoY || null, '%')}
-                change={macroData?.inflationYoY ? `${macroData.inflationYoY > 0 ? '+' : ''}${macroData.inflationYoY.toFixed(2)}%` : undefined}
-                changeType={getChangeType(macroData?.inflationYoY || null)}
+                value={formatValue(macroData?.inflationYoY ?? null, '%')}
+                change={macroData?.inflationYoY !== null && macroData?.inflationYoY !== undefined ? `${macroData.inflationYoY > 0 ? '+' : ''}${macroData.inflationYoY.toFixed(2)}%` : undefined}
+                changeType={getChangeType(macroData?.inflationYoY ?? null)}
                 description={t('metric.inflation.desc')}
               />
               <MetricBox
                 title={t('metric.unemployment')}
-                value={formatValue(macroData?.unemployment || null, '%')}
-                changeType={getChangeType(macroData?.unemployment || null)}
+                value={formatValue(macroData?.unemployment ?? null, '%')}
+                changeType={getChangeType(macroData?.unemployment ?? null)}
                 description={t('metric.unemployment.desc')}
               />
               <MetricBox
                 title={t('metric.repo_rate')}
-                value={formatValue(macroData?.repoRate || null, '%')}
+                value={formatValue(macroData?.repoRate ?? null, '%')}
                 changeType="neutral"
                 description={t('metric.repo_rate.desc')}
               />
@@ -251,7 +251,7 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
               {t('metric.repo_rate')}
             </h3>
             <div className="text-3xl font-bold text-paypro-600 mb-2">
-              {formatValue(macroData?.repoRate || null, '%')}
+              {formatValue(macroData?.repoRate ?? null, '%')}
             </div>
             <p className="text-sm text-gray-600">
               {t('metric.repo_rate.desc')}
@@ -266,7 +266,7 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
               {t('metric.sek_eur')}
             </h3>
             <div className="text-3xl font-bold text-paypro-600 mb-2">
-              {formatValue(macroData?.sekEur || null)}
+              {formatValue(macroData?.sekEur ?? null)}
             </div>
             <p className="text-sm text-gray-600">
               {t('metric.sek_eur.desc')}
@@ -281,7 +281,7 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
               {t('metric.usd_sek')}
             </h3>
             <div className="text-3xl font-bold text-paypro-600 mb-2">
-              {formatValue(macroData?.usdSek || null)}
+              {formatValue(macroData?.usdSek ?? null)}
             </div>
             <p className="text-sm text-gray-600">
               {t('metric.usd_sek.desc')}
@@ -296,7 +296,7 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
               {t('metric.usd_eur')}
             </h3>
             <div className="text-3xl font-bold text-paypro-600 mb-2">
-              {formatValue(macroData?.usdEur || null)}
+              {formatValue(macroData?.usdEur ?? null)}
             </div>
             <p className="text-sm text-gray-600">
               {t('metric.usd_eur.desc')}
@@ -311,7 +311,7 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
               {t('metric.ecb_rate')}
             </h3>
             <div className="text-3xl font-bold text-paypro-600 mb-2">
-              {formatValue(macroData?.ecbRate || null, '%')}
+              {formatValue(macroData?.ecbRate ?? null, '%')}
             </div>
             <p className="text-sm text-gray-600">
               {t('metric.ecb_rate.desc')}
