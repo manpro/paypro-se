@@ -29,18 +29,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (error) {
     console.error('Error fetching macro data for SSR:', error)
     
-    // Fallback data om API:er inte fungerar
+    // Fallback data om API:er inte fungerar - KORRIGERAT 2025-06-10
     const fallbackData: MacroData = {
       updated: dayjs().toISOString(),
-      gdpQoQ: 0.10,
-      inflationYoY: 1.80,
-      unemployment: 7.85,
-      hpiYoY: -6.20,
-      repoRate: 2.25,
-      sekEur: 10.943,
-      usdSek: 11.89,
-      usdEur: 0.919,
-      debtRatio: 186.50
+      gdpQoQ: -0.20,      // FIXAT: BNP minskade -0.2% Q1 2025
+      inflationYoY: 2.30, // FIXAT: KPI 2.3% maj 2025  
+      unemployment: 8.70, // FIXAT: AKU säsongrensad 8.7%
+      hpiYoY: -6.20,      // Oförändrad
+      repoRate: 2.25,     // Korrekt ✅
+      sekEur: 10.946,     // Korrekt ✅ 
+      usdSek: 9.60,       // FIXAT: USD/SEK ~9.60
+      usdEur: 0.88,       // FIXAT: USD/EUR ~0.88
+      debtRatio: 186.50   // Oförändrad
     }
     
     return {

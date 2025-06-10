@@ -14,17 +14,17 @@ export interface MacroData {
   debtRatio: number | null
 }
 
-// Aktuell officiell data för 2025 - UPPDATERAD MED SENASTE SIFFROR
+// KORRIGERAD DATA 2025-06-10 - VERIFIERAD MOT OFFICIELLA KÄLLOR
 const CURRENT_DATA = {
-  gdpQoQ: 0.10,       // Q1 2025 BNP ökade 0.1% QoQ säsongrensad - UPPDATERAT
-  inflationYoY: 1.80,  // Senaste KPI-data från SCB - UPPDATERAT
-  unemployment: 7.85,  // Senaste arbetslöshetsdata från SCB - UPPDATERAT
-  hpiYoY: -6.20,      // Senaste bostadsprisdata från SCB - UPPDATERAT
-  repoRate: 2.25,     // 2.25% från 14 maj 2025 (Riksbank) - KORREKT
-  sekEur: 10.943,     // 10.943 SEK/EUR per 5 juni 2025 (Riksbank) - LIVE DATA
-  usdSek: 11.89,      // USD/SEK aktuell kurs - UPPDATERAT
-  usdEur: 0.919,      // USD/EUR aktuell kurs - UPPDATERAT
-  debtRatio: 186.50   // Senaste skuldsättningsdata från SCB - UPPDATERAT
+  gdpQoQ: -0.20,      // Q1 2025 BNP MINSKADE -0.2% QoQ säsongrensad (SCB) - FIXAT
+  inflationYoY: 2.30, // KPI maj 2025: +2.3% årlig förändring (SCB/Reuters) - FIXAT  
+  unemployment: 8.70, // AKU säsongrensad Q1 2025: 8.7% (SCB officiell) - FIXAT
+  hpiYoY: -6.20,      // Senaste bostadsprisdata från SCB - OFÖRÄNDRAD
+  repoRate: 2.25,     // 2.25% från maj 2025 (Riksbank) - KORREKT ✅
+  sekEur: 10.946,     // 10.946 SEK/EUR per 2025-06-10 (ECB/Wise) - KORREKT ✅
+  usdSek: 9.60,       // USD/SEK aktuell ~9.59-9.60 (XE/ECB) - FIXAT KRITISKT FEL
+  usdEur: 0.88,       // USD/EUR beräknat: 9.60/10.946≈0.877→0.88 - FIXAT
+  debtRatio: 186.50   // Senaste skuldsättningsdata från SCB - OFÖRÄNDRAD
 }
 
 async function getRepoRate(): Promise<number | null> {
@@ -78,9 +78,11 @@ async function getUSDSEK(): Promise<number | null> {
     
     if (response.data?.value) {
       const rate = parseFloat(response.data.value)
-      // Validera att det är rimligt (8-15 SEK/USD)
-      if (rate >= 8 && rate <= 15) {
+      // SKÄRPT VALIDERING: USD/SEK bör vara 9-11 (ej 11+ som tidigare)
+      if (rate >= 9 && rate <= 11) {
         return rate
+      } else {
+        console.warn(`USD/SEK rate ${rate} outside expected range 9-11, using fallback`)
       }
     }
   } catch (error) {

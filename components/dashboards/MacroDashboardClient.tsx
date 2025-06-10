@@ -27,7 +27,7 @@ const historicalGDP = [
   { period: 'Q2 2024', value: 0.2 },
   { period: 'Q3 2024', value: 0.3 },
   { period: 'Q4 2024', value: 0.1 },
-  { period: 'Q1 2025', value: 0.1 },
+  { period: 'Q1 2025', value: -0.2 }, // FIXAT: BNP minskade -0.2% enligt SCB
 ]
 
 const historicalInflation = [
@@ -39,7 +39,7 @@ const historicalInflation = [
   { period: 'Q2 2024', value: 3.1 },
   { period: 'Q3 2024', value: 2.7 },
   { period: 'Q4 2024', value: 2.4 },
-  { period: 'Q1 2025', value: 1.8 },
+  { period: 'Q1 2025', value: 2.3 }, // FIXAT: KPI 2.3% enligt SCB/Reuters maj 2025
 ]
 
 const historicalRates = [
@@ -51,7 +51,7 @@ const historicalRates = [
   { period: 'Q2 2024', repo: 2.5, sek_eur: 11.0, usd_sek: 11.7, usd_eur: 0.93 },
   { period: 'Q3 2024', repo: 2.5, sek_eur: 10.9, usd_sek: 11.8, usd_eur: 0.92 },
   { period: 'Q4 2024', repo: 2.25, sek_eur: 10.943, usd_sek: 11.75, usd_eur: 0.93 },
-  { period: 'Q1 2025', repo: 2.25, sek_eur: 10.943, usd_sek: 11.89, usd_eur: 0.919 },
+  { period: 'Q1 2025', repo: 2.25, sek_eur: 10.946, usd_sek: 9.60, usd_eur: 0.88 }, // FIXAT: Korrekta kurser 2025-06-10
 ]
 
 export default function MacroDashboardClient({ locale }: MacroDashboardClientProps) {
