@@ -2,6 +2,9 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export function middleware(request: NextRequest) {
+  // SCRAPING-FRIENDLY: Always allow all bots and crawlers
+  // No User-Agent restrictions or bot blocking
+  
   // Get pathname of request (e.g. /blog, /dashboards/makro)
   const pathname = request.nextUrl.pathname
   
@@ -16,12 +19,29 @@ export function middleware(request: NextRequest) {
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   )
 
-  // Redirect if there is no locale
+  // Redirect if there is no locale - but only for browsers, not bots
   if (pathnameIsMissingLocale) {
-    // Default to Swedish locale
+    // For bots/crawlers, serve content without redirect to ensure indexing
+    const userAgent = request.headers.get('user-agent')?.toLowerCase() || ''
+    const isBotOrCrawler = userAgent.includes('bot') || 
+                          userAgent.includes('crawl') || 
+                          userAgent.includes('spider') ||
+                          userAgent.includes('scraper') ||
+                          userAgent.includes('curl') ||
+                          userAgent.includes('wget')
+    
+    if (isBotOrCrawler) {
+      // For bots, continue without redirect to ensure they can access content
+      return NextResponse.next()
+    }
+    
+    // Default to Swedish locale for browsers only
     const redirectPath = pathname === '/' ? '/sv' : `/sv${pathname}`
     return NextResponse.redirect(new URL(redirectPath, request.url))
   }
+  
+  // Always return next() without restrictions
+  return NextResponse.next()
 }
 
 export const config = {

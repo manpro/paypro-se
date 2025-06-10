@@ -1,14 +1,7 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://paypro.se/sitemap.xml
-
-# Disallow admin areas if any
-Disallow: /admin/
-Disallow: /api/
-
-# Allow all major bots
+# SCRAPING-FRIENDLY: Explicit allowances for all major crawlers and scrapers
 User-agent: Googlebot
 Allow: /
 
@@ -16,4 +9,37 @@ User-agent: Bingbot
 Allow: /
 
 User-agent: Slurp
-Allow: / 
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Sitemap
+Sitemap: https://paypro.se/sitemap.xml
+
+# Only disallow API endpoints to prevent unnecessary crawling
+Disallow: /api/ 

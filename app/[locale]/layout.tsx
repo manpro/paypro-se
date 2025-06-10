@@ -12,6 +12,23 @@ export async function generateStaticParams() {
 export const metadata = {
   title: 'PayPro.se - Ekonomisk analys och makrodata',
   description: 'Sveriges ledande plattform för ekonomisk analys, makrodata och finansiell rådgivning.',
+  robots: 'index, follow',
+  keywords: 'svensk ekonomi, BNP, inflation, arbetslöshet, reporänta, valutakurser, ekonomisk analys, finansiell rådgivning',
+  authors: [{ name: 'PayPro.se' }],
+  creator: 'PayPro.se',
+  publisher: 'PayPro.se',
+  openGraph: {
+    title: 'PayPro.se - Ekonomisk analys och makrodata',
+    description: 'Sveriges ledande plattform för ekonomisk analys, makrodata och finansiell rådgivning.',
+    url: 'https://paypro.se',
+    siteName: 'PayPro.se',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PayPro.se - Ekonomisk analys och makrodata',
+    description: 'Sveriges ledande plattform för ekonomisk analys, makrodata och finansiell rådgivning.',
+  },
 }
 
 export default function RootLayout({
