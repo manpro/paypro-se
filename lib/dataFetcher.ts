@@ -109,7 +109,7 @@ export async function fetchLiveEconomicData(): Promise<{
   timestamp: string
   repoRate: number
   exchangeRate: number
-  debtRatio: number
+  ecbRate: number
 }> {
   // Simulera API-delay
   await new Promise(resolve => setTimeout(resolve, 100 + Math.random() * 200))
@@ -117,13 +117,13 @@ export async function fetchLiveEconomicData(): Promise<{
   // Aktuella svenska ekonomiska nyckeltal (uppdaterat för konsistens med dashboard)
   const baseRepoRate = 2.25 // Senaste från Riksbanken - 2.25% från 14 maj 2025
   const baseExchangeRate = 10.943 // SEK/EUR per 5 juni 2025
-  const baseDebtRatio = 187 // Skuldsättningsgrad %
+  const baseEcbRate = 2.00 // ECB deposit facility rate %
   
   return {
     timestamp: new Date().toISOString(),
     repoRate: baseRepoRate + (Math.random() - 0.5) * 0.02, // Mycket små variationer
     exchangeRate: baseExchangeRate + (Math.random() - 0.5) * 0.05,
-    debtRatio: baseDebtRatio + (Math.random() - 0.5) * 0.5
+    ecbRate: baseEcbRate + (Math.random() - 0.5) * 0.02
   }
 }
 
