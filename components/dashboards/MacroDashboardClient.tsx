@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import useSWR from 'swr'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, AreaChart, Area } from 'recharts'
 import ChartCard from '@/components/dashboards/ChartCard'
@@ -55,11 +55,27 @@ const historicalRates = [
 ]
 
 export default function MacroDashboardClient({ locale }: MacroDashboardClientProps) {
+  // FIX: Prevent hydration mismatch with client-side state
+  const [isClient, setIsClient] = useState(false)
+  const [formattedUpdateTime, setFormattedUpdateTime] = useState('')
+
   const { data: macroData, error, isLoading, mutate } = useSWR<MacroData>('/api/macro', fetcher, {
     refreshInterval: 30000, // 30 seconds
     revalidateOnFocus: false,
     dedupingInterval: 10000
   })
+
+  // FIX: Use useEffect to handle client-side only operations
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  // FIX: Format time only on client-side to prevent hydration mismatch
+  useEffect(() => {
+    if (isClient && macroData?.updated) {
+      setFormattedUpdateTime(dayjs(macroData.updated).format('YYYY-MM-DD HH:mm:ss'))
+    }
+  }, [isClient, macroData?.updated])
 
   const loading = isLoading
   const hasError = error
@@ -88,6 +104,42 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
 
   const t = (key: keyof import('@/lib/translations').Translations) => getTranslation(key, locale)
 
+  // FIX: Don't render time-dependent content until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <main className="py-8 bg-gray-50 min-h-screen">
+        <div className="container-custom">
+          <div className="mb-8">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  {t('macro.title')}
+                </h1>
+                <p className="text-lg text-gray-600">
+                  {t('macro.description')}
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  {t('macro.updated')} Loading...
+                </p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Loading skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="metric-box animate-pulse">
+                <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                <div className="h-8 bg-gray-300 rounded mb-2"></div>
+                <div className="h-3 bg-gray-300 rounded"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="py-8 bg-gray-50 min-h-screen">
       <div className="container-custom">
@@ -101,11 +153,10 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
               <p className="text-lg text-gray-600">
                 {t('macro.description')}
               </p>
-              {macroData?.updated && (
-                <p className="text-sm text-gray-500 mt-2">
-                  {t('macro.updated')} {dayjs(macroData.updated).format('YYYY-MM-DD HH:mm:ss')}
-                </p>
-              )}
+              {/* FIX: Use client-side formatted time with suppressHydrationWarning */}
+              <p className="text-sm text-gray-500 mt-2" suppressHydrationWarning>
+                {t('macro.updated')} {formattedUpdateTime || 'Loading...'}
+              </p>
             </div>
             
             {/* Update controls */}
@@ -346,11 +397,10 @@ export default function MacroDashboardClient({ locale }: MacroDashboardClientPro
                     <p>
                       {t('sources.live.desc')}
                     </p>
-                    {macroData?.updated && (
-                      <p className="mt-1">
-                        <strong>{t('sources.updated')}</strong> {dayjs(macroData.updated).format('YYYY-MM-DD HH:mm:ss')}
-                      </p>
-                    )}
+                    {/* FIX: Use client-side formatted time with suppressHydrationWarning */}
+                    <p className="mt-1" suppressHydrationWarning>
+                      <strong>{t('sources.updated')}</strong> {formattedUpdateTime || 'Loading...'}
+                    </p>
                   </div>
                 </div>
               </div>

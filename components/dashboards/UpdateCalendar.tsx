@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import dayjs from 'dayjs'
 import { Locale } from '@/i18n.config'
 
@@ -18,8 +18,8 @@ interface UpdateCalendarProps {
 }
 
 // Kommande ekonomiska händelser och datauppdateringar
-const getUpcomingEvents = (): UpdateEvent[] => {
-  const now = dayjs()
+const getUpcomingEvents = (currentDate: dayjs.Dayjs): UpdateEvent[] => {
+  const now = currentDate
   const events: UpdateEvent[] = []
 
   // Riksbank - reporänta (vanligtvis 8 gånger per år)
@@ -108,7 +108,6 @@ const getUpcomingEvents = (): UpdateEvent[] => {
   })
 
   // Riksbank - Valutakurser (daglig uppdatering)
-  const today = now.format('YYYY-MM-DD')
   const nextWeekdays = []
   for (let i = 1; i <= 7; i++) {
     const nextDay = now.add(i, 'day')
@@ -186,8 +185,18 @@ const getImportanceIcon = (importance: string) => {
 }
 
 export default function UpdateCalendar({ locale }: UpdateCalendarProps) {
-  const events = getUpcomingEvents()
-  const nextEvents = events.slice(0, 8) // Visa nästa 8 händelser
+  // FIX: Prevent hydration mismatch with client-side state
+  const [isClient, setIsClient] = useState(false)
+  const [events, setEvents] = useState<UpdateEvent[]>([])
+  const [currentTime, setCurrentTime] = useState<dayjs.Dayjs | null>(null)
+
+  // FIX: Use useEffect to handle client-side only operations
+  useEffect(() => {
+    setIsClient(true)
+    const now = dayjs()
+    setCurrentTime(now)
+    setEvents(getUpcomingEvents(now))
+  }, [])
 
   const t = {
     title: locale === 'sv' ? 'Kommande uppdateringar' : 'Upcoming updates',
@@ -202,9 +211,10 @@ export default function UpdateCalendar({ locale }: UpdateCalendarProps) {
   }
 
   const getRelativeTime = (date: string) => {
+    if (!currentTime) return ''
+    
     const eventDate = dayjs(date)
-    const now = dayjs()
-    const diffDays = eventDate.diff(now, 'day')
+    const diffDays = eventDate.diff(currentTime, 'day')
 
     if (diffDays === 0) return t.today
     if (diffDays === 1) return t.tomorrow
@@ -212,6 +222,45 @@ export default function UpdateCalendar({ locale }: UpdateCalendarProps) {
     if (diffDays <= 14) return t.nextWeek
     return `${diffDays} ${t.daysAway}`
   }
+
+  // FIX: Show loading state until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <div className="card">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">
+              📅 {t.title}
+            </h3>
+            <p className="text-sm text-gray-600 mt-1">
+              {t.description}
+            </p>
+          </div>
+        </div>
+
+        {/* Loading skeleton */}
+        <div className="space-y-3">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="flex items-start space-x-3 p-3 rounded-lg border animate-pulse">
+              <div className="flex-shrink-0 mt-1">
+                <div className="w-6 h-6 bg-gray-300 rounded"></div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                <div className="h-3 bg-gray-300 rounded mb-2"></div>
+                <div className="flex justify-between">
+                  <div className="h-3 bg-gray-300 rounded w-20"></div>
+                  <div className="h-3 bg-gray-300 rounded w-16"></div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  const nextEvents = events.slice(0, 8) // Visa nästa 8 händelser
 
   return (
     <div className="card">
@@ -254,10 +303,11 @@ export default function UpdateCalendar({ locale }: UpdateCalendarProps) {
               </p>
               
               <div className="flex items-center justify-between mt-2">
-                <time className="text-xs font-medium text-gray-900">
+                {/* FIX: Use suppressHydrationWarning for date formatting */}
+                <time className="text-xs font-medium text-gray-900" suppressHydrationWarning>
                   {dayjs(event.date).format(locale === 'sv' ? 'D MMM YYYY' : 'MMM D, YYYY')}
                 </time>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500" suppressHydrationWarning>
                   {getRelativeTime(event.date)}
                 </span>
               </div>
