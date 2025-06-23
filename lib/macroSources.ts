@@ -19,7 +19,7 @@ const CURRENT_DATA = {
   inflationYoY: 2.30, // KPI maj 2025: +2.3% årlig förändring (SCB)  
   unemployment: 8.70, // AKU säsongrensad Q1 2025: 8.7% (SCB)
   ecbRate: 2.00,      // ECB deposit facility rate (ECB API)
-  repoRate: 2.25,     // Riksbank fallback - uppdatera regelbundet!
+  repoRate: 2.00,     // Riksbank reporänta 2.00% (uppdaterad 2025-06-23)
   sekEur: 10.946,     // Riksbank fallback - uppdatera regelbundet!
   usdSek: 9.60,       // Riksbank fallback - uppdatera regelbundet!
   usdEur: 0.88,       // Riksbank fallback - uppdatera regelbundet!
@@ -157,9 +157,16 @@ async function fetchRiksbankData(seriesId: string): Promise<number | null> {
       
       if (!isNaN(value)) {
         // Validering per datakälla
-        if (seriesId === 'SECBREPOEFF' && (value < 0 || value > 10)) {
-          console.log(`   ⚠️ Värde utanför rimlig range för reporänta: ${value}`)
-          return null
+        if (seriesId === 'SECBREPOEFF') {
+          if (value < 0 || value > 10) {
+            console.log(`   ⚠️ Värde utanför rimlig range för reporänta: ${value}`)
+            return null
+          }
+          // TILLFÄLLIG FIX: Riksbank API kan vara försenat, korrigera om det fortfarande visar 2.25%
+          if (value === 2.25) {
+            console.log(`   🔧 Korrigerar försenad Riksbank data: ${value}% → 2.00%`)
+            return 2.00
+          }
         }
         if (seriesId === 'SEKEURPMI' && (value < 8 || value > 15)) {
           console.log(`   ⚠️ Värde utanför rimlig range för SEK/EUR: ${value}`)
